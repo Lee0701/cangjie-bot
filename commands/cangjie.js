@@ -13,13 +13,15 @@ const lineWidth = 6
 const reduceToObject = (a, c) => (a[c[0]] = c[1], a)
 
 const keyCodes = {
-    'A': '日',
-    'B': '月',
-    'C': '金',
+    'A': ['日'],
+    'B': ['月'],
+    'C': ['金', '釒'],
+    'D': ['木', '木L'],
 
-    'T': '廿艹',
+    'T': ['廿', '艹'],
 
-    'AB': '明',
+    'AB': ['明'],
+    'BB': ['朋'],
 }
 
 const componentsDir = 'components'
@@ -47,7 +49,7 @@ function evalComponentProperty(name, key) {
 function renderWithOutline(ctx, name, offX, offY, width, height) {
     ctx.strokeStyle = 'white'
     ctx.lineWidth = lineWidth * 2
-    ctx.lineCap = 'square'
+    ctx.lineCap = 'round'
     render(ctx, name, offX, offY, width, height)
 
     ctx.strokeStyle = 'black'
@@ -60,7 +62,7 @@ function render(ctx, name, offX, offY, width, height) {
 
     if(Array.isArray(name)) {
         name.forEach(component => {
-            render(ctx, component.name, offX + component.x*width, offY + component.y*height, width * component.width, height * component.height)
+            render(ctx, component.component, offX + component.x*width, offY + component.y*height, width * component.width, height * component.height)
         })
         return
     }
@@ -164,23 +166,22 @@ function parseCodes(codes) {
         return placeDouble(first, second, alt)
 
     }
-    return keyCodes[codes[0]][0]
+    return null
 }
 
 function placeSingle(names, alt) {
     return [
-        {component: names.split('')[alt], x: 0, y: 0, width: 1, height: 1},
+        {component: names[alt], x: 0, y: 0, width: 1, height: 1},
     ]
 }
 
 function placeDouble(firsts, seconds, alt) {
-    if(!firsts || !seconds) return null
+    if(firsts === undefined || seconds === undefined) return null
 
-    if(Array.isArray(firsts)) firsts = parseCodes(firsts)
-    else firsts = firsts.split('')
-
-    if(Array.isArray(seconds)) seconds = parseCodes(seconds)
-    else seconds = seconds.split('')
+    const firstObjects = parseCodes(firsts)
+    const secondObjects = parseCodes(seconds)
+    if(firstObjects) firsts = [firstObjects]
+    if(secondObjects) seconds = [secondObjects]
 
     const lefts = firsts.filter(c => getComponentProperty(c, 'placement.left') !== false)
     const tops = firsts.filter(c => getComponentProperty(c, 'placement.top') !== false)
@@ -223,8 +224,9 @@ module.exports = {
         const ctx = canvas.getContext('2d')
 
         parsed.forEach(obj => {
+            if(!obj) return
             if(typeof obj === 'string') renderWithOutline(ctx, obj.charAt(0), 0, 0, width, height)
-            if(typeof obj === 'object') obj.forEach(component => renderWithOutline(ctx, component.component, component.x*width, component.y*height, component.width*width, component.height*height))
+            if(Array.isArray(obj)) obj.forEach(component => renderWithOutline(ctx, component.component, component.x*width, component.y*height, component.width*width, component.height*height))
         })
         const png = canvas.toBuffer()
 

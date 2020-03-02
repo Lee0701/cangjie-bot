@@ -10,9 +10,7 @@
     },
     "padding": {
         "left": "parent * 3",
-        "right": "parent * 3",
-        "top": "parent * 2",
-        "bottom": "parent * 2"
+        "right": "parent * 3"
     },
     "paths": [
         "M 0 0 v 1 Z",

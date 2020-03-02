@@ -1,0 +1,20 @@
+{
+    "code": "D",
+    "char": "木",
+    "ids": "木",
+    "parent": "basic",
+    "placement": {
+        "right": true,
+        "bottomfourths": true
+    },
+    "padding": {
+        "left": "parent * 2",
+        "right": "parent * 2"
+    },
+    "paths": [
+        "M 0 0.25 h 1 Z",
+        "M 0.5 0 v 1 Z",
+        "M 0.5 0.375 q -0.25 0.375, -0.5 0.5 Z",
+        "M 0.5 0.375 q 0.25 0.3, 0.5 0.5 Z"
+    ]
+}

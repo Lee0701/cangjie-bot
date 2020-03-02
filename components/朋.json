@@ -1,0 +1,25 @@
+{
+    "char": "朋",
+    "ids": "朋",
+    "parent": "composite",
+    "placement": {
+        "right": true,
+        "bottomfourths": true
+    },
+    "components": [
+        {
+            "name": "月",
+            "x": "0.1",
+            "y": "0",
+            "width": "0.5",
+            "height": "1"
+        },
+        {
+            "name": "月",
+            "x": "0.5",
+            "y": "0",
+            "width": "0.5",
+            "height": "1"
+        }
+    ]
+}
