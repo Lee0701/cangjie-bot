@@ -6,13 +6,14 @@
         "left": true
     },
     "padding": {
-        "left": "parent * 6",
+        "left": "parent * 3",
+        "right": "parent * 3",
         "top": "parent * 2",
         "bottom": "parent * 2"
     },
     "paths": [
-        "M 0 0 L 0.75 0.125",
-        "M 0 0.25 L 0.75 0.375",
+        "M 0 0 L 1 0.125",
+        "M 0 0.25 L 1 0.375",
         "M 0 1 L 1 0.625"
     ]
 }

@@ -31,67 +31,76 @@ const components = fs.readdirSync(componentsDir)
         .map(file => [file.replace('.json', ''), JSON.parse(fs.readFileSync(path.join(componentsDir, file)).toString())])
         .reduce(reduceToObject, {})
 
-function getComponentProperty(name, key) {
-    if(!components[name]) return undefined
-    const result = key.split('.').reduce((a, c) => a && a[c], components[name])
-    if(result === undefined) return getComponentProperty(components[name].parent, key)
+function getComponentParent(component) {
+    if(component.parent) return component.parent
+    if(component.parent === null) return null
+    return 'component'
+}
+
+function getComponentProperty(component, key) {
+    if(typeof component === 'string') component = components[component]
+    if(!component) return undefined
+    const result = key.split('.').reduce((a, c) => a && a[c], component)
+    if(result === undefined) return getComponentProperty(getComponentParent(component), key)
     else return result
 }
 
-function evalComponentProperty(name, key) {
-    const component = components[name]
+function evalComponentProperty(component, key) {
+    if(typeof component === 'string') component = components[component]
     if(!component) return undefined
     const value = key.split('.').reduce((a, c) => a && a[c], component)
-    const parent = component.parent ? evalComponentProperty(component.parent, key) : null
-    if(value) return safeEval(value, {parent})
+    const parent = evalComponentProperty(getComponentParent(component), key)
+    if(typeof value === 'string') return safeEval(value, {parent: parent})
+    else if(value) return value
     else return parent
 }
 
-function renderWithOutline(ctx, name, offX, offY, width, height) {
+function renderWithOutline(ctx, name, x, y, width, height) {
     ctx.strokeStyle = 'white'
     ctx.lineWidth = lineWidth * 2
     ctx.lineCap = 'round'
-    render(ctx, name, offX, offY, width, height)
+    render(ctx, name, x, y, width, height)
 
     ctx.strokeStyle = 'black'
     ctx.lineWidth = lineWidth
     ctx.lineCap = 'square'
-    render(ctx, name, offX, offY, width, height)
+    render(ctx, name, x, y, width, height)
 }
 
-function render(ctx, name, offX, offY, width, height) {
-
-    if(Array.isArray(name)) {
-        name.forEach(component => {
-            render(ctx, component.component, offX + component.x*width, offY + component.y*height, width * component.width, height * component.height)
-        })
-        return
-    }
-
-    const component = components[name]
+function render(ctx, component, x, y, width, height) {
     if(!component) return
 
     const padding = ['left', 'right', 'top', 'bottom']
             .map(key => 'padding.' + key)
-            .map(key => [key.replace('padding.', ''), evalComponentProperty(name, key)])
+            .map(key => [key.replace('padding.', ''), evalComponentProperty(component, key)])
             .reduce(reduceToObject, {})
+    
+    const offX = evalComponentProperty(component, "x") * width + x
+    const offY = evalComponentProperty(component, "y") * height + y
+    const widthScale = evalComponentProperty(component, "width")
+    const heightScale = evalComponentProperty(component, "height")
     
     padding.left *= width
     padding.right *= width
     padding.top *= height
     padding.bottom *= height
 
-    const innerWidth = width - padding.left - padding.right
-    const innerHeight = height - padding.top - padding.bottom
+    const actualWidth = width*widthScale
+    const actualHeight = height*heightScale
+
+    const innerWidth = actualWidth - padding.left - padding.right
+    const innerHeight = actualHeight - padding.top - padding.bottom
 
     const getX = (x) => offX + x * innerWidth + padding.left
     const getY = (y) => offY + y * innerHeight + padding.top
 
-    if(component.components) component.components.forEach(component => {
-        render(ctx, component.name, offX + component.x*width, offY + component.y*height, component.width * width, component.height * height)
+    const components = getComponentProperty(component, 'components')
+    if(components) components.forEach(component => {
+        render(ctx, component, offX, offY, innerWidth, innerHeight)
     })
 
-    if(component.paths) component.paths.forEach(path => {
+    const paths = getComponentProperty(component, 'paths')
+    if(paths) paths.forEach(path => {
         const cmds = path.split(/[,]?[ ]+/)
         let x = 0
         let y = 0
@@ -171,9 +180,7 @@ function parseCodes(codes) {
 }
 
 function placeSingle(names, alt) {
-    return [
-        {component: names[alt], x: 0, y: 0, width: 1, height: 1},
-    ]
+    return {parent: names[alt], x: 0, y: 0, width: 1, height: 1}
 }
 
 function placeDouble(firsts, seconds, alt) {
@@ -197,20 +204,25 @@ function placeDouble(firsts, seconds, alt) {
         let secondAlt = 0
         for(let i = 0 ; i < alt ; i++) (i % 2 == 0 && firsts.length > firstAlt-1) ? firstAlt++ : (seconds.length > secondAlt-1) ? secondAlt++ : 0
 
-        return [
-            {component: firsts[firstAlt], x: a.x, y: a.y, width: a.width, height: a.height},
-            {component: seconds[secondAlt], x: b.x, y: b.y, width: b.width, height: b.height},
-        ]
+        return {
+            components: [
+                {parent: firsts[firstAlt], x: a.x, y: a.y, width: a.width, height: a.height, padding: a.padding},
+                {parent: seconds[secondAlt], x: b.x, y: b.y, width: b.width, height: b.height, padding: b.padding},
+            ]
+        }
     }
 
     if(lefts.length > 0 && rights.length > 0) {
-        return combine(lefts, rights, {x: 0, y: 0, width: 0.33, height: 1}, {x: 0.33, y: 0, width: 0.66, height: 1})
+        const padding = {left: 'parent / 2', right: 'parent / 2'}
+        return combine(lefts, rights, {x: 0, y: 0, width: 0.33, height: 1, padding}, {x: 0.33, y: 0, width: 0.66, height: 1, padding})
     }
     if(tops.length > 0 && bottoms.length > 0) {
-        return combine(tops, bottoms, {x: 0, y: 0, width: 1, height: 0.5}, {x: 0, y: 0.5, width: 1, height: 0.5})
+        const padding = {top: 'parent / 2', bottom: 'parent / 2'}
+        return combine(tops, bottoms, {x: 0, y: 0, width: 1, height: 0.5, padding}, {x: 0, y: 0.5, width: 1, height: 0.5, padding})
     }
     if(topFourths.length > 0 && bottomFourths.length > 0) {
-        return combine(topFourths, bottomFourths, {x: 0, y: 0, width: 1, height: 0.25}, {x: 0, y: 0.25, width: 1, height: 0.75})
+        const padding = {top: 'parent / 2', bottom: 'parent / 2'}
+        return combine(topFourths, bottomFourths, {x: 0, y: 0, width: 1, height: 0.25, padding}, {x: 0, y: 0.25, width: 1, height: 0.75, padding})
     }
     
     return null
@@ -227,8 +239,8 @@ module.exports = {
 
         parsed.forEach(obj => {
             if(!obj) return
-            if(typeof obj === 'string') renderWithOutline(ctx, obj.charAt(0), 0, 0, width, height)
-            if(Array.isArray(obj)) obj.forEach(component => renderWithOutline(ctx, component.component, component.x*width, component.y*height, component.width*width, component.height*height))
+            else if(typeof obj === 'string') renderWithOutline(ctx, obj.charAt(0), 0, 0, width, height)
+            else if(typeof obj === 'object') renderWithOutline(ctx, obj, 0, 0, width, height)
         })
         const png = canvas.toBuffer()
 
