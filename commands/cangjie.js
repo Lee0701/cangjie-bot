@@ -12,24 +12,15 @@ const lineWidth = 6
 
 const reduceToObject = (a, c) => (a[c[0]] = c[1], a)
 
-const keyCodes = {
-    'A': ['日', '曰'],
-    'B': ['月'],
-    'C': ['金', '釒'],
-    'D': ['木', '木L'],
-    'E': ['水', '氵'],
-
-    'T': ['廿', '艹'],
-
-    'AB': ['明'],
-    'BB': ['朋'],
-}
-
 const componentsDir = 'components'
 const components = fs.readdirSync(componentsDir)
         .filter(file => file.endsWith('.json'))
         .map(file => [file.replace('.json', ''), JSON.parse(fs.readFileSync(path.join(componentsDir, file)).toString())])
         .reduce(reduceToObject, {})
+
+function getComponentsByCode(code) {
+    return Object.values(components).filter(component => component.code === code)
+}
 
 function getComponentParent(component) {
     if(component.parent) return component.parent
@@ -157,8 +148,8 @@ function parseCodes(codes) {
     let alt = 0
     for(alt = 0 ; codes[0] === 'X' ; alt++, codes.shift()) {}
     
-    const component = keyCodes[codes.join('')]
-    if(component) {
+    const component = getComponentsByCode(codes.join(''))
+    if(component && component.length > 0) {
         return placeSingle(component, alt)
     }
     else if(codes.length == 5) {
@@ -166,13 +157,13 @@ function parseCodes(codes) {
     } else if(codes.length == 4) {
         
     } else if(codes.length == 3) {
-        return placeDouble(keyCodes[codes[0]], keyCodes[codes[1] + codes[2]], alt)
-                || placeDouble(keyCodes[codes[0] + codes[1]], keyCodes[codes[2]], alt)
-                || placeDouble(keyCodes[codes[0]], codes.slice(1))
-                || placeDouble(codes.slice(0, 2), keyCodes[codes[2]])
+        return placeDouble(getComponentsByCode(codes[0]), getComponentsByCode(codes[1] + codes[2]), alt)
+                || placeDouble(getComponentsByCode(codes[0] + codes[1]), getComponentsByCode(codes[2]), alt)
+                || placeDouble(getComponentsByCode(codes[0]), codes.slice(1))
+                || placeDouble(codes.slice(0, 2), getComponentsByCode(codes[2]))
     } else if(codes.length == 2) {
-        const first = keyCodes[codes[0]]
-        const second = keyCodes[codes[1]]
+        const first = getComponentsByCode(codes[0])
+        const second = getComponentsByCode(codes[1])
         return placeDouble(first, second, alt)
 
     }
