@@ -1,0 +1,14 @@
+{
+    "code": "J",
+    "char": "宀",
+    "ids": "宀",
+    "parent": "basic",
+    "placement": {
+        "topfourths": true
+    },
+    "paths": [
+        "M 0.5 0 v 0.5 Z",
+        "M 0 0.5 v 0.5 Z",
+        "M 0 0.5 h 1 v 0.5 Z"
+    ]
+}

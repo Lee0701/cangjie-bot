@@ -1,0 +1,14 @@
+{
+    "code": "K",
+    "char": "大",
+    "ids": "大",
+    "parent": "basic",
+    "placement": {
+        "top": true
+    },
+    "paths": [
+        "M 0 0.25 H 1 Z",
+        "M 0.5 0 Q 0.5 0.75, 0 1 Z",
+        "M 0.5 0.25 Q 0.75 0.75, 1 1 Z"
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    "code": "G",
+    "char": "土",
+    "ids": "土",
+    "parent": "basic",
+    "placement": {
+        "left": true
+    },
+    "paths": [
+        "M 0.125 0.5 H 0.875 Z",
+        "M 0.5 0 v 1 Z",
+        "M 0 1 H 1 Z"
+    ]
+}

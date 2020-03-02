@@ -1,5 +1,10 @@
 {
     "parent": "component",
+    "placement": {
+        "bottom": true,
+        "bottomfourths": true,
+        "right": true
+    },
     "padding": {
         "left": "0.0625",
         "right": "0.0625",
