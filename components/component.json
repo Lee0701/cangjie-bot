@@ -1,0 +1,21 @@
+{
+    "code": "",
+    "char": "",
+    "ids": "",
+    "parent": null,
+    "placement": {
+        "top": false,
+        "bottom": false,
+        "topfourths": false,
+        "bottomfourths": false,
+        "left": false,
+        "right": false
+    },
+    "padding": {
+        "left": "0",
+        "right": "0",
+        "top": "0",
+        "bottom": "0"
+    },
+    "paths": []
+}

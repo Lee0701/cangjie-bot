@@ -1,0 +1,25 @@
+{
+    "char": "明",
+    "ids": "明",
+    "parent": "composite",
+    "placement": {
+        "right": true,
+        "bottomfourths": true
+    },
+    "components": [
+        {
+            "name": "日",
+            "x": "0",
+            "y": "0.125",
+            "width": "0.5",
+            "height": "0.625"
+        },
+        {
+            "name": "月",
+            "x": "0.4",
+            "y": "0",
+            "width": "0.6",
+            "height": "1"
+        }
+    ]
+}

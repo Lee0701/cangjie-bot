@@ -1,0 +1,20 @@
+{
+    "code": "T",
+    "char": "艹",
+    "ids": "艹",
+    "parent": "basic",
+    "placement": {
+        "topfourths": true
+    },
+    "padding": {
+        "left": "parent * 3",
+        "right": "parent * 3",
+        "top": "parent * 2",
+        "bottom": "parent * 2"
+    },
+    "paths": [
+        "M 0 0.5 h 1 Z",
+        "M 0.25 0 v 1 Z",
+        "M 0.75 0 v 1 Z"
+    ]
+}
