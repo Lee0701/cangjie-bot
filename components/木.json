@@ -4,6 +4,7 @@
     "ids": "木",
     "parent": "basic",
     "placement": {
+        "top": true,
         "right": true,
         "bottomfourths": true
     },

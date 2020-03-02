@@ -4,6 +4,7 @@
     "ids": "月",
     "parent": "basic",
     "placement": {
+        "top": true,
         "left": true,
         "right": true,
         "bottomfourths": true

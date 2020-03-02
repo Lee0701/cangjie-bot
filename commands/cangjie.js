@@ -195,7 +195,8 @@ function placeDouble(firsts, seconds, alt) {
     const combine = (firsts, seconds, a, b) => {
         let firstAlt = 0
         let secondAlt = 0
-        for(let i = 0 ; i < alt ; i++) (alt % 2 == 0 && firsts.length < firstAlt) ? firstAlt++ : (seconds.length < secondAlt) ? secondAlt++ : 0
+        for(let i = 0 ; i < alt ; i++) (i % 2 == 0 && firsts.length > firstAlt-1) ? firstAlt++ : (seconds.length > secondAlt-1) ? secondAlt++ : 0
+
         return [
             {component: firsts[firstAlt], x: a.x, y: a.y, width: a.width, height: a.height},
             {component: seconds[secondAlt], x: b.x, y: b.y, width: b.width, height: b.height},

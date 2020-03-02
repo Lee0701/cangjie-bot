@@ -4,6 +4,7 @@
     "ids": "日",
     "parent": "basic",
     "placement": {
+        "top": true,
         "left": true,
         "right": true,
         "bottomfourths": true

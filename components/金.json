@@ -4,6 +4,7 @@
     "ids": "金",
     "parent": "basic",
     "placement": {
+        "top": true,
         "right": true,
         "bottomfourths": true
     },
