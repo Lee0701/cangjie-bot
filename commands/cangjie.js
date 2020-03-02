@@ -13,10 +13,11 @@ const lineWidth = 6
 const reduceToObject = (a, c) => (a[c[0]] = c[1], a)
 
 const keyCodes = {
-    'A': ['日'],
+    'A': ['日', '曰'],
     'B': ['月'],
     'C': ['金', '釒'],
     'D': ['木', '木L'],
+    'E': ['水', '氵'],
 
     'T': ['廿', '艹'],
 

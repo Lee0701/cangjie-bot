@@ -1,0 +1,18 @@
+{
+    "char": "曰",
+    "ids": "曰",
+    "parent": "basic",
+    "placement": {
+        "right": true
+    },
+    "padding": {
+        "left": "parent * 2",
+        "right": "parent * 2"
+    },
+    "paths": [
+        "M 0 0 v 1 Z",
+        "M 0 0 h 1 V 1 Z",
+        "M 0 0.5 h 0.75 Z",
+        "M 0 1 h 1 Z"
+    ]
+}
