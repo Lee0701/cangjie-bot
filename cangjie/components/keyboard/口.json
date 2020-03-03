@@ -1,7 +1,7 @@
 {
-    "code": "W",
-    "char": "田",
-    "ids": "田",
+    "code": "R",
+    "char": "口",
+    "ids": "口",
     "parent": "basic",
     "placement": {
         "left": true
@@ -15,8 +15,6 @@
     "paths": [
         "M 0 0 v 1 Z",
         "M 0 0 h 1 V 1 Z",
-        "M 0 0.5 h 1 Z",
-        "M 0.5 0 v 1 Z",
         "M 0 1 h 1 Z"
     ]
 }

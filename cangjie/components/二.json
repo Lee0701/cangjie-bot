@@ -1,0 +1,22 @@
+{
+    "code": "MM",
+    "char": "二",
+    "ids": "二",
+    "parent": "basic",
+    "placement": {
+        "top": true,
+        "bottom": true
+    },
+    "components": [
+        {
+            "parent": "top",
+            "x": "0.125",
+            "width": "0.75",
+            "components": ["一"]
+        },
+        {
+            "parent": "bottom",
+            "components": ["一"]
+        }
+    ]
+}

@@ -3,11 +3,6 @@
     "char": "李",
     "ids": "李",
     "parent": "basic",
-    "placement": {
-        "bottomfourths": true,
-        "right": true,
-        "surrounded": true
-    },
     "components": [
         {
             "parent": "top",

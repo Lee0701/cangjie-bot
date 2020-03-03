@@ -6,6 +6,7 @@
     "placement": {
         "topthirds": true
     },
+    "priority": 90,
     "padding": {
         "top": "parent * 2",
         "bottom": "parent * 2"

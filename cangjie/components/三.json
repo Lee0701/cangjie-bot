@@ -1,0 +1,33 @@
+{
+    "code": "MMM",
+    "char": "三",
+    "ids": "三",
+    "parent": "basic",
+    "placement": {
+        "top": true,
+        "bottom": true
+    },
+    "components": [
+        {
+            "parent": "topthirds",
+            "x": "0.125",
+            "width": "0.75",
+            "components": ["一"]
+        },
+        {
+            "parent": "bottomthirds",
+            "components": [
+                {
+                    "parent": "top",
+                    "x": "0.25",
+                    "width": "0.5",
+                    "components": ["一"]
+                },
+                {
+                    "parent": "bottom",
+                    "components": ["一"]
+                }
+            ]
+        }
+    ]
+}

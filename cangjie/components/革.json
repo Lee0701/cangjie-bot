@@ -1,0 +1,31 @@
+{
+    "code": "TLJ",
+    "char": "革",
+    "ids": "革",
+    "parent": "basic",
+    "placement": {
+        "left": true
+    },
+    "components": [
+        {
+            "parent": "topthirds",
+            "components": ["廿"]
+        },
+        {
+            "parent": "bottomthirds",
+            "components": [
+                {
+                    "parent": "top",
+                    "height": "0.66",
+                    "components": ["中"]
+                },
+                {
+                    "parent": "top",
+                    "y": "0.66",
+                    "height": "0.33",
+                    "components": ["十"]
+                }
+            ]
+        }
+    ]
+}

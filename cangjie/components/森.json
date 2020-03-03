@@ -3,9 +3,6 @@
     "char": "森",
     "ids": "森",
     "parent": "basic",
-    "placement": {
-        "bottom": false
-    },
     "components": [
         {
             "parent": "top",

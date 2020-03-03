@@ -4,8 +4,8 @@
     "ids": "子",
     "parent": "basic",
     "placement": {
-        "bottom": true,
-        "top": true
+        "top": true,
+        "bottom": true
     },
     "padding": {
         "left": "parent * 2",
