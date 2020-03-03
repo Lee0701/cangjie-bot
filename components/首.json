@@ -1,7 +1,7 @@
 {
-    "code": "HBU",
-    "char": "自",
-    "ids": "自",
+    "code": "THBU",
+    "char": "首",
+    "ids": "首",
     "parent": "composite",
     "placement": {
         "right": true,

@@ -31,8 +31,8 @@ function matchComponentsByCode(code) {
     return Object.values(components)
             .filter(component => component.code
                     && component.code.length >= 2
-                    && component.code.startsWith(code.substring(0, 1))
-                    && component.code.endsWith(code.substring(1)))
+                    && component.code.startsWith(code.substring(0, 2))
+                    && component.code.endsWith(code.substring(2)))
 }
 
 function getComponentParent(component) {
