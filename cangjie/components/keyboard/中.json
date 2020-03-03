@@ -3,9 +3,12 @@
     "char": "中",
     "ids": "中",
     "parent": "basic",
+    "placement": {
+        "bottom": true
+    },
     "padding": {
-        "left": "parent * 2",
-        "right": "parent * 2"
+        "left": "parent * 3",
+        "right": "parent * 3"
     },
     "paths": [
         "M 0 0.375 v 0.25 Z",

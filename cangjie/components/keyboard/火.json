@@ -4,6 +4,7 @@
     "ids": "火",
     "parent": "basic",
     "placement": {
+        "bottom": true,
         "left": true
     },
     "paths": [

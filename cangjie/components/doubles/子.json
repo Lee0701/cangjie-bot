@@ -4,6 +4,7 @@
     "ids": "子",
     "parent": "basic",
     "placement": {
+        "bottom": true,
         "top": true
     },
     "padding": {

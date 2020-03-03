@@ -262,8 +262,10 @@ class Cangjie {
 
         const candidates = available.map(placement => ({
             placement: placement,
-            firsts: firsts.filter(c => this.getComponentProperty(c, 'placement.' + placement)),
+            firsts: firsts.filter(c => this.getComponentProperty(c, 'placement.' + placement))
+                    .sort((a, b) => this.getComponentProperty(a, 'priority') - this.getComponentProperty(b, 'priority')),
             seconds: seconds.filter(c => this.getComponentProperty(c, 'placement.' + this.getComponentProperty(placement, 'pair')))
+                    .sort((a, b) => this.getComponentProperty(a, 'priority') - this.getComponentProperty(b, 'priority'))
         }))
 
         const combine = (firsts, seconds, firstPlacement, secondPlacement) => {

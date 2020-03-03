@@ -21,6 +21,7 @@
         "surrounded": false,
         "overlap": false
     },
+    "priority": 0,
     "padding": {
         "left": "0",
         "right": "0",

@@ -4,7 +4,6 @@
     "ids": "門",
     "parent": "basic",
     "placement": {
-        "left": true,
         "surroundtop": true
     },
     "padding": {

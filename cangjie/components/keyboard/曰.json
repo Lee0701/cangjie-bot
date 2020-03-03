@@ -3,9 +3,6 @@
     "char": "曰",
     "ids": "曰",
     "parent": "basic",
-    "placement": {
-        "right": true
-    },
     "padding": {
         "left": "parent * 2",
         "right": "parent * 2"
