@@ -1,0 +1,16 @@
+{
+    "code": "HANA",
+    "char": "簡",
+    "ids": "簡",
+    "parent": "basic",
+    "components": [
+        {
+            "parent": "topthirds",
+            "components": ["⺮"]
+        },
+        {
+            "parent": "bottomthirds",
+            "components": ["間"]
+        }
+    ]
+}
