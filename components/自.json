@@ -1,10 +1,9 @@
 {
-    "code": "HA",
-    "char": "白",
-    "ids": "白",
+    "code": "HBU",
+    "char": "自",
+    "ids": "自",
     "parent": "composite",
     "placement": {
-        "left": true,
         "right": true,
         "top": true,
         "bottomfourths": true,
@@ -20,7 +19,7 @@
             }
         },
         {
-            "parent": "日",
+            "parent": "目",
             "y": "0.25",
             "height": "0.75",
             "padding": {
