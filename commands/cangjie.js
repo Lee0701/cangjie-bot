@@ -22,6 +22,10 @@ function getComponentsByCode(code) {
     return Object.values(components).filter(component => component.code === code)
 }
 
+function matchComponentsByCode(code) {
+    return Object.values(components).filter(component => component.code && component.code.startsWith(code.substring(0, 1)) && component.code.endsWith(code.substring(1)))
+}
+
 function getComponentParent(component) {
     if(component.parent) return component.parent
     if(component.parent === null) return null
@@ -153,19 +157,24 @@ function parseCodes(codes) {
         return placeSingle(component, alt)
     }
     else if(codes.length == 5) {
-
+        const first = matchComponentsByCode(codes.slice(0, 2).join(''))
+        const second = matchComponentsByCode(codes.slice(2).join(''))
+        return placeDouble(first.length ? first : [parseCodes(codes.slice(0, 2))], second.length ? second : [parseCodes(codes.slice(2))], alt)
     } else if(codes.length == 4) {
-        
+        const first = matchComponentsByCode(codes.slice(0, 3).join(''))
+        const second = matchComponentsByCode(codes.slice(1).join(''))
+        const halfFirst = matchComponentsByCode(codes.slice(0, 2).join(''))
+        const halfSecond = matchComponentsByCode(codes.slice(2).join(''))
+        return placeDouble(getComponentsByCode(codes[0]), second.length ? second : [parseCodes(codes.slice(1))], alt)
+                || placeDouble(halfFirst.length ? halfFirst : [parseCodes(codes.slice(0, 2))], halfSecond.length ? halfSecond : [parseCodes(codes.slice(2))], alt)
+                || placeDouble(first.length ? first : [parseCodes(codes.slice(0, 3))], getComponentsByCode(codes[3]), alt)
     } else if(codes.length == 3) {
-        return placeDouble(getComponentsByCode(codes[0]), getComponentsByCode(codes[1] + codes[2]), alt)
-                || placeDouble(getComponentsByCode(codes[0] + codes[1]), getComponentsByCode(codes[2]), alt)
-                || placeDouble(getComponentsByCode(codes[0]), codes.slice(1))
-                || placeDouble(codes.slice(0, 2), getComponentsByCode(codes[2]))
+        const first = getComponentsByCode(codes[0] + codes[1])
+        const second = getComponentsByCode(codes[1] + codes[2])
+        return placeDouble(getComponentsByCode(codes[0]), second.length ? second : [parseCodes(codes.slice(1))], alt)
+                || placeDouble(first.length ? first : [parseCodes(codes.slice(0, 2))], getComponentsByCode(codes[2]), alt)
     } else if(codes.length == 2) {
-        const first = getComponentsByCode(codes[0])
-        const second = getComponentsByCode(codes[1])
-        return placeDouble(first, second, alt)
-
+        return placeDouble(getComponentsByCode(codes[0]), getComponentsByCode(codes[1]), alt)
     }
     return null
 }
@@ -175,12 +184,7 @@ function placeSingle(names, alt) {
 }
 
 function placeDouble(firsts, seconds, alt) {
-    if(firsts === undefined || seconds === undefined) return null
-
-    const firstObjects = parseCodes(firsts)
-    const secondObjects = parseCodes(seconds)
-    if(firstObjects) firsts = [firstObjects]
-    if(secondObjects) seconds = [secondObjects]
+    if(firsts === undefined || seconds === undefined) return undefined
 
     const lefts = firsts.filter(c => getComponentProperty(c, 'placement.left') !== false)
     const tops = firsts.filter(c => getComponentProperty(c, 'placement.top') !== false)
@@ -190,7 +194,7 @@ function placeDouble(firsts, seconds, alt) {
     const bottoms = seconds.filter(c => getComponentProperty(c, 'placement.bottom') !== false)
     const bottomFourths = seconds.filter(c => getComponentProperty(c, 'placement.bottomfourths') !== false)
 
-    const combine = (firsts, seconds, a, b) => {
+    const combine = (firsts, seconds, a, b, placement={}) => {
         let firstAlt = 0
         let secondAlt = 0
         for(let i = 0 ; i < alt ; i++) (i % 2 == 0 && firsts.length > firstAlt-1) ? firstAlt++ : (seconds.length > secondAlt-1) ? secondAlt++ : 0
@@ -199,17 +203,20 @@ function placeDouble(firsts, seconds, alt) {
             components: [
                 {parent: firsts[firstAlt], x: a.x, y: a.y, width: a.width, height: a.height, padding: a.padding},
                 {parent: seconds[secondAlt], x: b.x, y: b.y, width: b.width, height: b.height, padding: b.padding},
-            ]
+            ],
+            placement
         }
     }
 
     if(lefts.length > 0 && rights.length > 0) {
         const padding = {left: 'parent / 2', right: 'parent / 2'}
-        return combine(lefts, rights, {x: 0, y: 0, width: 0.33, height: 1, padding}, {x: 0.33, y: 0, width: 0.66, height: 1, padding})
+        const placement = {top: true, bottom: true, topfourths: true, bottomfourths: true, right: true}
+        return combine(lefts, rights, {x: 0, y: 0, width: 0.33, height: 1, padding}, {x: 0.33, y: 0, width: 0.66, height: 1, padding}, placement)
     }
     if(tops.length > 0 && bottoms.length > 0) {
         const padding = {top: 'parent / 2', bottom: 'parent / 2'}
-        return combine(tops, bottoms, {x: 0, y: 0, width: 1, height: 0.5, padding}, {x: 0, y: 0.5, width: 1, height: 0.5, padding})
+        const placement = {left: true, right: true}
+        return combine(tops, bottoms, {x: 0, y: 0, width: 1, height: 0.5, padding}, {x: 0, y: 0.5, width: 1, height: 0.5, padding}, placement)
     }
     if(topFourths.length > 0 && bottomFourths.length > 0) {
         const padding = {top: 'parent / 2', bottom: 'parent / 2'}

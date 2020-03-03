@@ -1,0 +1,31 @@
+{
+    "code": "DDD",
+    "char": "森",
+    "ids": "森",
+    "parent": "composite",
+    "placement": {
+        "bottom": true,
+        "bottomfourths": true,
+        "right": true
+    },
+    "components": [
+        {
+            "parent": "木",
+            "y": "0",
+            "height": "0.5",
+            "padding": {
+                "top": "parent / 2",
+                "bottom": "parent / 2"
+            }
+        },
+        {
+            "parent": "林",
+            "y": "0.5",
+            "height": "0.5",
+            "padding": {
+                "top": "parent / 2",
+                "bottom": "parent / 2"
+            }
+        }
+    ]
+}

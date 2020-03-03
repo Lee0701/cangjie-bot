@@ -1,0 +1,35 @@
+{
+    "code": "DD",
+    "char": "林",
+    "ids": "林",
+    "parent": "composite",
+    "placement": {
+        "bottom": true,
+        "bottomfourths": true,
+        "right": true
+    },
+    "components": [
+        {
+            "parent": "木L",
+            "x": "0",
+            "y": "0",
+            "width": "0.5",
+            "height": "1",
+            "padding": {
+                "left": "parent / 2",
+                "right": "parent / 2"
+            }
+        },
+        {
+            "parent": "木",
+            "x": "0.5",
+            "y": "0",
+            "width": "0.5",
+            "height": "1",
+            "padding": {
+                "left": "parent / 2",
+                "right": "parent / 2"
+            }
+        }
+    ]
+}
