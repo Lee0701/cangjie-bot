@@ -264,6 +264,7 @@ function placeDouble(firsts, seconds, alt, firstPlacement=null, secondPlacement=
 
 module.exports = {
     name: 'cangjie',
+    aliases: ['cj'],
     description: 'cangjie character generator',
     execute(msg, args) {
         const parsed = args.map(arg => parse(arg))

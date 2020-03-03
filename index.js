@@ -16,6 +16,7 @@ client.on('ready', () => {
 fs.readdirSync('./commands').filter(file => file.endsWith('.js')).forEach(file => {
     const command = require('./commands/' + file)
     client.commands.set(command.name, command)
+    if(command.aliases) command.aliases.forEach(alias => client.commands.set(alias, command))
 })
 
 client.on('message', (msg) => {
@@ -24,9 +25,8 @@ client.on('message', (msg) => {
     const args = msg.content.slice(prefix.length).split(/ +/)
     const cmd = args.shift().toLowerCase()
 
-    if(cmd === 'cangjie') {
-        client.commands.get('cangjie').execute(msg, args)
-    }
+    const command = client.commands.get(cmd)
+    if(command) command.execute(msg, args)
 
 })
 
