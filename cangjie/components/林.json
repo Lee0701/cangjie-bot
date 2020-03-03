@@ -4,7 +4,8 @@
     "ids": "林",
     "parent": "basic",
     "placement": {
-        "top": true
+        "top": true,
+        "topthirds": true
     },
     "components": [
         {

@@ -43,6 +43,8 @@ class Cangjie {
     }
 
     matchComponentsByCode(code) {
+        const exactMatch = this.getComponentsByCode(code)
+        if(exactMatch.length) return exactMatch
         return Object.values(this.components).filter(component => {
             if(!component.code) return false
             if(component.code.length >= 3) {
