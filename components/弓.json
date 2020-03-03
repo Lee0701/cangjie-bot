@@ -1,0 +1,18 @@
+{
+    "code": "N",
+    "char": "弓",
+    "ids": "弓",
+    "parent": "basic",
+    "placement": {
+        "left": true
+    },
+    "padding": {
+        "left": "parent * 2",
+        "right": "parent * 2"
+    },
+    "paths": [
+        "M 0 0 h 1 v 0.25 Z",
+        "M 0.0625 0.25 H 1 Z",
+        "M 0.0625 0.25 l -0.0625 0.35 h 1 v 0.4 h -0.25 Z"
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "code": "O",
+    "char": "亻",
+    "ids": "亻",
+    "parent": "basic",
+    "placement": {
+        "left": true
+    },
+    "padding": {
+        "left": "parent * 3",
+        "right": "parent * 3"
+    },
+    "paths": [
+        "M 1 0 Q 0.5 0.375, 0 0.5 Z",
+        "M 0.5 0.375 v 0.625 Z"
+    ]
+}

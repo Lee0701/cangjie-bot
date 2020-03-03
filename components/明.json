@@ -11,9 +11,9 @@
         {
             "parent": "日",
             "x": "0",
-            "y": "0.125",
+            "y": "0",
             "width": "0.45",
-            "height": "0.625",
+            "height": "0.75",
             "padding": {
                 "left": "parent / 2",
                 "right": "parent / 2"
