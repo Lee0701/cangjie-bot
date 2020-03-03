@@ -9,22 +9,12 @@
     },
     "components": [
         {
-            "parent": "宀",
-            "y": "0",
-            "height": "0.33",
-            "padding": {
-                "top": "parent / 2",
-                "bottom": "parent / 2"
-            }
+            "parent": "topthirds",
+            "components": ["宀"]
         },
         {
-            "parent": "子",
-            "y": "0.33",
-            "height": "0.66",
-            "padding": {
-                "top": "parent / 2",
-                "bottom": "parent / 2"
-            }
+            "parent": "bottomthirds",
+            "components": ["子"]
         }
     ]
 }

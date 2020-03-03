@@ -4,7 +4,7 @@
     "ids": "艹",
     "parent": "basic",
     "placement": {
-        "topfourths": true
+        "topthirds": true
     },
     "padding": {
         "top": "parent * 2",

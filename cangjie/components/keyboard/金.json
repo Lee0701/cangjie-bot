@@ -4,9 +4,7 @@
     "ids": "金",
     "parent": "basic",
     "placement": {
-        "top": true,
-        "right": true,
-        "bottomfourths": true
+        "top": true
     },
     "paths": [
         "M 0.5 0 q -0.25 0.25 -0.5 0.375 Z",

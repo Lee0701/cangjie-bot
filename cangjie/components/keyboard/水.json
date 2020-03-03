@@ -4,8 +4,7 @@
     "ids": "水",
     "parent": "basic",
     "placement": {
-        "top": true,
-        "right": true
+        "top": true
     },
     "padding": {
         "left": "parent * 2",

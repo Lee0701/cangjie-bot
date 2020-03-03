@@ -4,7 +4,7 @@
     "ids": "⻗",
     "parent": "basic",
     "placement": {
-        "topfourths": true
+        "topthirds": true
     },
     "padding": {
         "bottom": "parent * 2"

@@ -43,11 +43,18 @@ class Cangjie {
     }
 
     matchComponentsByCode(code) {
-        return Object.values(this.components)
-                .filter(component => component.code
-                        && component.code.length >= 2
-                        && component.code.startsWith(code.substring(0, 2))
-                        && component.code.endsWith(code.substring(2)))
+        return Object.values(this.components).filter(component => {
+            if(!component.code) return false
+            if(component.code.length >= 3) {
+                if(code.length == 2) return component.code.startsWith(code.substring(0, 1))
+                        && component.code.endsWith(code.substring(1))
+                else if(code.length == 3) return component.code.startsWith(code.substring(0, 2))
+                        && component.code.endsWith(code.substring(2))
+            } else if(component.code.length == 2) {
+                if(code.length == 2) return component.code == code
+            }
+            return false
+        })
     }
 
     getComponentParent(component) {
@@ -167,9 +174,9 @@ class Cangjie {
             const idsPlacements = {
                 '+': {first: null, second: null},
                 '-': {first: ['left', 'lefthalf'], second: ['right', 'righthalf']},
-                '|': {first: ['top', 'topfourths'], second: ['bottom', 'bottomfourths']},
+                '|': {first: ['top', 'topthirds'], second: ['bottom', 'bottomthirds']},
                 '⿰': {first: ['left', 'lefthalf'], second: ['right', 'righthalf']},
-                '⿱': {first: ['top', 'topfourths'], second: ['bottom', 'bottomfourths']},
+                '⿱': {first: ['top', 'topthirds'], second: ['bottom', 'bottomthirds']},
                 '⿲': {first: null, second: null},
                 '⿳': {first: null, second: null},
                 '⿴': {first: ['surroundcenter'], second: ['surrounded']},
@@ -238,10 +245,10 @@ class Cangjie {
         if(firsts === undefined || seconds === undefined) return undefined
 
         const pairs = [
-            ['surroundtop', 'surrounded', {x: 0, y: 0, width: 1, height: 1}, {x: 0.25, y: 0.5, width: 0.5, height: 0.5}, {right: true, bottomfourths: true, surrounded: true}],
-            ['left', 'right', {x: 0, y: 0, width: 0.33, height: 1}, {x: 0.33, y: 0, width: 0.66, height: 1}, {bottom: true, bottomfourths: true, surrounded: true}],
+            ['surroundtop', 'surrounded', {x: 0, y: 0, width: 1, height: 1}, {x: 0.25, y: 0.5, width: 0.5, height: 0.5}, {right: true, bottomthirds: true, surrounded: true}],
+            ['left', 'right', {x: 0, y: 0, width: 0.33, height: 1}, {x: 0.33, y: 0, width: 0.66, height: 1}, {bottom: true, bottomthirds: true, surrounded: true}],
             ['top', 'bottom', {x: 0, y: 0, width: 1, height: 0.5}, {x: 0, y: 0.5, width: 1, height: 0.5}, {right: true, surrounded: true}],
-            ['topfourths', 'bottomfourths', {x: 0, y: 0, width: 1, height: 0.33}, {x: 0, y: 0.33, width: 1, height: 0.66}, {surrounded: true}],
+            ['topthirds', 'bottomthirds', {x: 0, y: 0, width: 1, height: 0.33}, {x: 0, y: 0.33, width: 1, height: 0.66}, {surrounded: true}],
             ['lefthalf', 'righthalf', {x: 0, y: 0, width: 0.5, height: 1}, {x: 0.5, y: 0, width: 0.5, height: 1}, {top: true, bottom: true, surrounded: true}],
         ].filter(pair => (!firstPlacement || firstPlacement.includes(pair[0])) && (!secondPlacement || secondPlacement.includes(pair[1])))
 

@@ -2,13 +2,10 @@
     "code": "HA",
     "char": "白",
     "ids": "白",
-    "parent": "composite",
+    "parent": "basic",
     "placement": {
         "left": true,
-        "right": true,
-        "top": true,
-        "bottomfourths": true,
-        "surrounded": true
+        "top": true
     },
     "components": [
         {

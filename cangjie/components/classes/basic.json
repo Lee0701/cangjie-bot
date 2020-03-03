@@ -2,7 +2,7 @@
     "parent": "component",
     "placement": {
         "bottom": true,
-        "bottomfourths": true,
+        "bottomthirds": true,
         "right": true,
         "lefthalf": true,
         "righthalf": true,

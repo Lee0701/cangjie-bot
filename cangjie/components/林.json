@@ -11,22 +11,12 @@
     },
     "components": [
         {
-            "parent": "木L",
-            "x": "0",
-            "width": "0.5",
-            "padding": {
-                "left": "parent / 2",
-                "right": "parent / 2"
-            }
+            "parent": "lefthalf",
+            "components": ["木L"]
         },
         {
-            "parent": "木",
-            "x": "0.5",
-            "width": "0.5",
-            "padding": {
-                "left": "parent / 2",
-                "right": "parent / 2"
-            }
+            "parent": "righthalf",
+            "components": ["木"]
         }
     ]
 }

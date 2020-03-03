@@ -5,9 +5,7 @@
     "parent": "basic",
     "placement": {
         "top": true,
-        "left": true,
-        "right": true,
-        "bottomfourths": true
+        "left": true
     },
     "padding": {
         "left": "parent * 3",

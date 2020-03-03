@@ -2,7 +2,7 @@
     "code": "AB",
     "char": "明",
     "ids": "明",
-    "parent": "composite",
+    "parent": "basic",
     "placement": {
         "right": true,
         "bottomfourths": true

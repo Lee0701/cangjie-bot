@@ -5,7 +5,6 @@
     "parent": "basic",
     "placement": {
         "left": true,
-        "right": true,
         "surroundtop": true
     },
     "padding": {

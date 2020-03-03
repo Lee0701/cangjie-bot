@@ -4,9 +4,7 @@
     "ids": "目",
     "parent": "basic",
     "placement": {
-        "left": true,
-        "right": true,
-        "bottomfourths": true
+        "left": true
     },
     "padding": {
         "left": "parent * 3",

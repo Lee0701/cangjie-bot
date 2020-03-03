@@ -10,28 +10,12 @@
     },
     "components": [
         {
-            "parent": "木",
-            "x": "0",
-            "y": "0",
-            "width": "1",
-            "height": "0.5",
-            "padding": {
-                "left": "parent / 2",
-                "right": "parent / 2",
-                "top": "parent / 2",
-                "bottom": "parent / 2"
-            }
+            "parent": "top",
+            "components": ["木"]
         },
         {
-            "parent": "子",
-            "x": "0",
-            "y": "0.5",
-            "width": "1",
-            "height": "0.5",
-            "padding": {
-                "top": "parent / 2",
-                "bottom": "parent / 2"
-            }
+            "parent": "bottom",
+            "components": ["子"]
         }
     ]
 }

@@ -6,8 +6,8 @@
     "placement": {
         "top": false,
         "bottom": false,
-        "topfourths": false,
-        "bottomfourths": false,
+        "topthirds": false,
+        "bottomthirds": false,
         "left": false,
         "right": false,
         "lefthalf": false,
