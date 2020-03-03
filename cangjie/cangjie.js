@@ -57,7 +57,15 @@ class Cangjie {
         })
     }
 
+    isChildOf(component, parentName) {
+        const parent = this.getComponentParent(component)
+        if(!parent) return false
+        if(typeof parent === 'string' && parent === parentName) return true
+        else return this.isChildOf(parent, parentName)
+    }
+
     getComponentParent(component) {
+        if(typeof component === 'string') component = this.components[component]
         if(component.parent) return component.parent
         if(component.parent === null) return null
         return 'component'
@@ -244,21 +252,19 @@ class Cangjie {
     placeDouble(firsts, seconds, alt, firstPlacement=null, secondPlacement=null) {
         if(firsts === undefined || seconds === undefined) return undefined
 
-        const pairs = [
-            ['surroundtop', 'surrounded', {x: 0, y: 0, width: 1, height: 1}, {x: 0.25, y: 0.5, width: 0.5, height: 0.5}, {right: true, bottomthirds: true, surrounded: true}],
-            ['left', 'right', {x: 0, y: 0, width: 0.33, height: 1}, {x: 0.33, y: 0, width: 0.66, height: 1}, {bottom: true, bottomthirds: true, surrounded: true}],
-            ['top', 'bottom', {x: 0, y: 0, width: 1, height: 0.5}, {x: 0, y: 0.5, width: 1, height: 0.5}, {right: true, surrounded: true}],
-            ['topthirds', 'bottomthirds', {x: 0, y: 0, width: 1, height: 0.33}, {x: 0, y: 0.33, width: 1, height: 0.66}, {surrounded: true}],
-            ['lefthalf', 'righthalf', {x: 0, y: 0, width: 0.5, height: 1}, {x: 0.5, y: 0, width: 0.5, height: 1}, {top: true, bottom: true, surrounded: true}],
-        ].filter(pair => (!firstPlacement || firstPlacement.includes(pair[0])) && (!secondPlacement || secondPlacement.includes(pair[1])))
+        const placements = Object.keys(this.components)
+                .filter(component => this.isChildOf(component, 'placement'))
 
-        const candidates = pairs.map(pair => [
-            [firsts.filter(c => this.getComponentProperty(c, 'placement.' + pair[0]) !== false), pair[2]],
-            [seconds.filter(c => this.getComponentProperty(c, 'placement.' + pair[1]) !== false), pair[3]],
-            pair[4]
-        ])
+        const available = placements
+                .filter(placement => (!firstPlacement || firstPlacement.includes(placement)) && (!secondPlacement || secondPlacement.includes(this.getComponentProperty(placement, 'pair'))))
 
-        const combine = (firsts, seconds, a, b, placement={}) => {
+        const candidates = available.map(placement => ({
+            placement: placement,
+            firsts: firsts.filter(c => this.getComponentProperty(c, 'placement.' + placement)),
+            seconds: seconds.filter(c => this.getComponentProperty(c, 'placement.' + this.getComponentProperty(placement, 'pair')))
+        }))
+
+        const combine = (firsts, seconds, firstPlacement, secondPlacement) => {
             let firstAlt = 0
             let secondAlt = 0
             for(let i = 0 ; i < alt ; i++) {
@@ -268,17 +274,17 @@ class Cangjie {
             }
 
             return {
+                parent: "basic",
                 components: [
-                    {parent: firsts[firstAlt], x: a.x, y: a.y, width: a.width, height: a.height},
-                    {parent: seconds[secondAlt], x: b.x, y: b.y, width: b.width, height: b.height},
-                ],
-                placement
+                    {parent: firstPlacement, components: [firsts[firstAlt]]},
+                    {parent: secondPlacement, components: [seconds[secondAlt]]},
+                ]
             }
         }
 
         for(const candidate of candidates) {
-            if(candidate[0][0].length > 0 && candidate[1][0].length > 0) {
-                const result = combine(candidate[0][0], candidate[1][0], candidate[0][1], candidate[1][1], candidate[2])
+            if(candidate.firsts.length > 0 && candidate.seconds.length > 0) {
+                const result = combine(candidate.firsts, candidate.seconds, candidate.placement, this.getComponentProperty(candidate.placement, 'pair'))
                 if(result) return result
             }
         }

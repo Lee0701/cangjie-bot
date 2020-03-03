@@ -2,10 +2,9 @@
     "code": "JND",
     "char": "字",
     "ids": "字",
-    "parent": "composite",
+    "parent": "basic",
     "placement": {
-        "left": true,
-        "right": true
+        "left": true
     },
     "components": [
         {

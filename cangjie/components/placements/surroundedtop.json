@@ -1,7 +1,7 @@
 {
     "parent": "placement",
-    "x": "0",
+    "x": "0.25",
     "y": "0.5",
-    "width": "1",
+    "width": "0.5",
     "height": "0.5"
 }

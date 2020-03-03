@@ -2,7 +2,7 @@
     "code": "DND",
     "char": "李",
     "ids": "李",
-    "parent": "composite",
+    "parent": "basic",
     "placement": {
         "bottomfourths": true,
         "right": true,
