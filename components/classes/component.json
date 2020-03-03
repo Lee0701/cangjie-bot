@@ -10,6 +10,8 @@
         "bottomfourths": false,
         "left": false,
         "right": false,
+        "lefthalf": false,
+        "righthalf": false,
         "surroundcenter": false,
         "surroundtop": false,
         "surroundtopleft": false,

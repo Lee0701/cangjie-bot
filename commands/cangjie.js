@@ -12,18 +12,25 @@ const lineWidth = 6
 
 const reduceToObject = (a, c) => (a[c[0]] = c[1], a)
 
+const addFiles = (dir) => fs.readdirSync(dir).flatMap(file => {
+    if(fs.lstatSync(path.join(dir, file)).isDirectory()) return addFiles(path.join(dir, file))
+    else if(file.endsWith('.json')) return [[file.replace('.json', ''), JSON.parse(fs.readFileSync(path.join(dir, file)))]]
+    else return []
+})
+
 const componentsDir = 'components'
-const components = fs.readdirSync(componentsDir)
-        .filter(file => file.endsWith('.json'))
-        .map(file => [file.replace('.json', ''), JSON.parse(fs.readFileSync(path.join(componentsDir, file)).toString())])
-        .reduce(reduceToObject, {})
+const components = addFiles(componentsDir).reduce(reduceToObject, {})
 
 function getComponentsByCode(code) {
     return Object.values(components).filter(component => component.code === code)
 }
 
 function matchComponentsByCode(code) {
-    return Object.values(components).filter(component => component.code && component.code.startsWith(code.substring(0, 1)) && component.code.endsWith(code.substring(1)))
+    return Object.values(components)
+            .filter(component => component.code
+                    && component.code.length >= 2
+                    && component.code.startsWith(code.substring(0, 1))
+                    && component.code.endsWith(code.substring(1)))
 }
 
 function getComponentParent(component) {
@@ -75,23 +82,23 @@ function render(ctx, component, x, y, width, height) {
     const widthScale = evalComponentProperty(component, "width")
     const heightScale = evalComponentProperty(component, "height")
     
-    padding.left *= width
-    padding.right *= width
-    padding.top *= height
-    padding.bottom *= height
-
     const actualWidth = width*widthScale
     const actualHeight = height*heightScale
+
+    padding.left *= actualWidth
+    padding.right *= actualWidth
+    padding.top *= actualHeight
+    padding.bottom *= actualHeight
 
     const innerWidth = actualWidth - padding.left - padding.right
     const innerHeight = actualHeight - padding.top - padding.bottom
 
-    const getX = (x) => offX + x * innerWidth + padding.left
-    const getY = (y) => offY + y * innerHeight + padding.top
+    const getX = (x) => offX + padding.left + x * innerWidth
+    const getY = (y) => offY + padding.top + y * innerHeight
 
     const components = getComponentProperty(component, 'components')
     if(components) components.forEach(component => {
-        render(ctx, component, offX, offY, innerWidth, innerHeight)
+        render(ctx, component, offX + padding.left, offY + padding.top, innerWidth, innerHeight)
     })
 
     const paths = getComponentProperty(component, 'paths')
@@ -165,8 +172,8 @@ function parseCodes(codes) {
         const second = matchComponentsByCode(codes.slice(1).join(''))
         const halfFirst = matchComponentsByCode(codes.slice(0, 2).join(''))
         const halfSecond = matchComponentsByCode(codes.slice(2).join(''))
-        return placeDouble(getComponentsByCode(codes[0]), second.length ? second : [parseCodes(codes.slice(1))], alt)
-                || placeDouble(halfFirst.length ? halfFirst : [parseCodes(codes.slice(0, 2))], halfSecond.length ? halfSecond : [parseCodes(codes.slice(2))], alt)
+        return placeDouble(halfFirst.length ? halfFirst : [parseCodes(codes.slice(0, 2))], halfSecond.length ? halfSecond : [parseCodes(codes.slice(2))], alt)
+                || placeDouble(getComponentsByCode(codes[0]), second.length ? second : [parseCodes(codes.slice(1))], alt)
                 || placeDouble(first.length ? first : [parseCodes(codes.slice(0, 3))], getComponentsByCode(codes[3]), alt)
     } else if(codes.length == 3) {
         const first = getComponentsByCode(codes[0] + codes[1])
@@ -186,13 +193,18 @@ function placeSingle(names, alt) {
 function placeDouble(firsts, seconds, alt) {
     if(firsts === undefined || seconds === undefined) return undefined
 
-    const lefts = firsts.filter(c => getComponentProperty(c, 'placement.left') !== false)
-    const tops = firsts.filter(c => getComponentProperty(c, 'placement.top') !== false)
-    const topFourths = firsts.filter(c => getComponentProperty(c, 'placement.topfourths') !== false)
-    
-    const rights = seconds.filter(c => getComponentProperty(c, 'placement.right') !== false)
-    const bottoms = seconds.filter(c => getComponentProperty(c, 'placement.bottom') !== false)
-    const bottomFourths = seconds.filter(c => getComponentProperty(c, 'placement.bottomfourths') !== false)
+    const pairs = [
+        ['left', 'right', {x: 0, y: 0, width: 0.33, height: 1}, {x: 0.33, y: 0, width: 0.66, height: 1}, {bottom: true, bottomfourths: true}],
+        ['top', 'bottom', {x: 0, y: 0, width: 1, height: 0.5}, {x: 0, y: 0.5, width: 1, height: 0.5}, {right: true}],
+        ['topfourths', 'bottomfourths', {x: 0, y: 0, width: 1, height: 0.33}, {x: 0, y: 0.33, width: 1, height: 0.66}, {}],
+        ['lefthalf', 'righthalf', {x: 0, y: 0, width: 0.5, height: 1}, {x: 0.5, y: 0, width: 0.5, height: 1}, {top: true, bottom: true}],
+    ]
+
+    const candidates = pairs.map(pair => [
+        [firsts.filter(c => getComponentProperty(c, 'placement.' + pair[0]) !== false), pair[2]],
+        [seconds.filter(c => getComponentProperty(c, 'placement.' + pair[1]) !== false), pair[3]],
+        pair[4]
+    ])
 
     const combine = (firsts, seconds, a, b, placement={}) => {
         let firstAlt = 0
@@ -208,21 +220,12 @@ function placeDouble(firsts, seconds, alt) {
         }
     }
 
-    if(lefts.length > 0 && rights.length > 0) {
-        const padding = {left: 'parent / 2', right: 'parent / 2'}
-        const placement = {top: true, bottom: true, topfourths: true, bottomfourths: true, right: true}
-        return combine(lefts, rights, {x: 0, y: 0, width: 0.33, height: 1, padding}, {x: 0.33, y: 0, width: 0.66, height: 1, padding}, placement)
+    for(candidate of candidates) {
+        if(candidate[0][0].length > 0 && candidate[1][0].length > 0) {
+            return combine(candidate[0][0], candidate[1][0], candidate[0][1], candidate[1][1], candidate[2])
+        }
     }
-    if(tops.length > 0 && bottoms.length > 0) {
-        const padding = {top: 'parent / 2', bottom: 'parent / 2'}
-        const placement = {left: true, right: true}
-        return combine(tops, bottoms, {x: 0, y: 0, width: 1, height: 0.5, padding}, {x: 0, y: 0.5, width: 1, height: 0.5, padding}, placement)
-    }
-    if(topFourths.length > 0 && bottomFourths.length > 0) {
-        const padding = {top: 'parent / 2', bottom: 'parent / 2'}
-        return combine(topFourths, bottomFourths, {x: 0, y: 0, width: 1, height: 0.25, padding}, {x: 0, y: 0.25, width: 1, height: 0.75, padding})
-    }
-    
+
     return null
 }
 
@@ -238,7 +241,7 @@ module.exports = {
         parsed.forEach(obj => {
             if(!obj) return
             else if(typeof obj === 'string') renderWithOutline(ctx, obj.charAt(0), 0, 0, width, height)
-            else if(typeof obj === 'object') renderWithOutline(ctx, obj, 0, 0, width, height)
+            else if(typeof obj === 'object') renderWithOutline(ctx, {parent: 'root', components: [obj]}, 0, 0, width, height)
         })
         const png = canvas.toBuffer()
 

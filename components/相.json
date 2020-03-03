@@ -1,13 +1,10 @@
 {
-    "code": "DD",
-    "char": "林",
-    "ids": "林",
+    "code": "DBU",
+    "char": "相",
+    "ids": "相",
     "parent": "composite",
     "placement": {
-        "top": true,
-        "bottom": true,
-        "bottomfourths": true,
-        "right": true
+        "bottomfourths": true
     },
     "components": [
         {
@@ -20,7 +17,7 @@
             }
         },
         {
-            "parent": "木",
+            "parent": "目",
             "x": "0.5",
             "width": "0.5",
             "padding": {
