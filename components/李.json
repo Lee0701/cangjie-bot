@@ -5,7 +5,8 @@
     "parent": "composite",
     "placement": {
         "bottomfourths": true,
-        "right": true
+        "right": true,
+        "surrounded": true
     },
     "components": [
         {

@@ -6,6 +6,9 @@
     "placement": {
         "topfourths": true
     },
+    "padding": {
+        "bottom": "parent * 2"
+    },
     "paths": [
         "M 0.125 0 h 0.75 Z",
         "M 0 0.33 v 0.33 Z",
