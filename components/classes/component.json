@@ -14,10 +14,12 @@
         "righthalf": false,
         "surroundcenter": false,
         "surroundtop": false,
+        "surroundleft": false,
         "surroundtopleft": false,
         "surroundtopright": false,
         "surroundbottomleft": false,
-        "surrounded": false
+        "surrounded": false,
+        "overlap": false
     },
     "padding": {
         "left": "0",

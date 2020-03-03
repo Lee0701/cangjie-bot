@@ -21,6 +21,8 @@ const addFiles = (dir) => fs.readdirSync(dir).flatMap(file => {
 const componentsDir = 'components'
 const components = addFiles(componentsDir).reduce(reduceToObject, {})
 
+const decompositions = fs.readFileSync('cangjie-list.txt').toString().split('\n').map(line => line.split('\t')).reduce(reduceToObject, {})
+
 function getComponentsByCode(code) {
     return Object.values(components).filter(component => component.code === code)
 }
@@ -141,18 +143,43 @@ function render(ctx, component, x, y, width, height) {
 }
 
 function parse(str) {
-    let others = []
-    let codes = []
-    str.split('').forEach(ch => {
-        const code = ch.toUpperCase()
-        if(code >= 'A' && code <= 'Z') {
-            codes.push(code)
-        } else {
-            others.push(ch)
+    const chars = str.split('')
+    if(chars.every(ch => ch.toUpperCase() >= 'A' && ch.toUpperCase() <= 'Z')) {
+        return parseCodes(chars)
+    } else {
+        const idsPlacements = {
+            '+': {first: null, second: null},
+            '-': {first: ['left', 'lefthalf'], second: ['right', 'righthalf']},
+            '|': {first: ['top', 'topfourths'], second: ['bottom', 'bottomfourths']},
+            '⿰': {first: ['left', 'lefthalf'], second: ['right', 'righthalf']},
+            '⿱': {first: ['top', 'topfourths'], second: ['bottom', 'bottomfourths']},
+            '⿲': {first: null, second: null},
+            '⿳': {first: null, second: null},
+            '⿴': {first: ['surroundcenter'], second: ['surrounded']},
+            '⿵': {first: ['surroundtop'], second: ['surrounded']},
+            '⿶': {first: ['surroundbottom'], second: ['surrounded']},
+            '⿷': {first: ['surroundleft'], second: ['surrounded']},
+            '⿸': {first: ['surroundtopleft'], second: ['surrounded']},
+            '⿹': {first: ['surroundtopright'], second: ['surrounded']},
+            '⿺': {first: ['surroundbottomleft'], second: ['surrounded']},
+            '⿻': {first: ['overlap'], second: ['overlap']},
         }
-    })
-    if(others.length > 0) return others.join('')
-    else return parseCodes(codes)
+        const parseIds = (chars) => {
+            const ch = chars.shift()
+            const op = idsPlacements[ch]
+            if(op) {
+                const first = parseIds(chars)
+                const second = parseIds(chars)
+                return placeDouble([first], [second], 0, op.first, op.second)
+            }
+            else return components[ch] || parseCodes(decompositions[ch].split(''))
+        }
+        if(chars.length == 3) {
+            const op = idsPlacements[chars[1]]
+            if(op) return placeDouble([parseIds(chars.slice(0, 1))], [parseIds(chars.slice(2))], 0, op.first, op.second)
+        }
+        return parseIds(chars)
+    }
 }
 
 function parseCodes(codes) {
@@ -190,7 +217,7 @@ function placeSingle(names, alt) {
     return {parent: names[alt], x: 0, y: 0, width: 1, height: 1}
 }
 
-function placeDouble(firsts, seconds, alt) {
+function placeDouble(firsts, seconds, alt, firstPlacement=null, secondPlacement=null) {
     if(firsts === undefined || seconds === undefined) return undefined
 
     const pairs = [
@@ -199,7 +226,7 @@ function placeDouble(firsts, seconds, alt) {
         ['top', 'bottom', {x: 0, y: 0, width: 1, height: 0.5}, {x: 0, y: 0.5, width: 1, height: 0.5}, {right: true, surrounded: true}],
         ['topfourths', 'bottomfourths', {x: 0, y: 0, width: 1, height: 0.33}, {x: 0, y: 0.33, width: 1, height: 0.66}, {surrounded: true}],
         ['lefthalf', 'righthalf', {x: 0, y: 0, width: 0.5, height: 1}, {x: 0.5, y: 0, width: 0.5, height: 1}, {top: true, bottom: true, surrounded: true}],
-    ]
+    ].filter(pair => (!firstPlacement || firstPlacement.includes(pair[0])) && (!secondPlacement || secondPlacement.includes(pair[1])))
 
     const candidates = pairs.map(pair => [
         [firsts.filter(c => getComponentProperty(c, 'placement.' + pair[0]) !== false), pair[2]],
@@ -218,8 +245,8 @@ function placeDouble(firsts, seconds, alt) {
 
         return {
             components: [
-                {parent: firsts[firstAlt], x: a.x, y: a.y, width: a.width, height: a.height, padding: a.padding},
-                {parent: seconds[secondAlt], x: b.x, y: b.y, width: b.width, height: b.height, padding: b.padding},
+                {parent: firsts[firstAlt], x: a.x, y: a.y, width: a.width, height: a.height},
+                {parent: seconds[secondAlt], x: b.x, y: b.y, width: b.width, height: b.height},
             ],
             placement
         }
