@@ -104,7 +104,9 @@ function render(ctx, component, x, y, width, height) {
     })
 
     const paths = getComponentProperty(component, 'paths')
-    if(paths) paths.forEach(path => {
+    const startStroke = evalComponentProperty(component, 'startstroke')
+    const endStroke = evalComponentProperty(component, 'endstroke')
+    if(paths) paths.slice(startStroke, endStroke).forEach(path => {
         const cmds = path.split(/[,]?[ ]+/)
         let x = 0
         let y = 0

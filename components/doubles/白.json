@@ -1,0 +1,31 @@
+{
+    "code": "HA",
+    "char": "白",
+    "ids": "白",
+    "parent": "composite",
+    "placement": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottomfourths": true,
+        "surrounded": true
+    },
+    "components": [
+        {
+            "parent": "丿",
+            "y": "0",
+            "height": "0.33",
+            "padding": {
+                "bottom": "parent / 2"
+            }
+        },
+        {
+            "parent": "日",
+            "y": "0.33",
+            "height": "0.66",
+            "padding": {
+                "top": "parent / 2"
+            }
+        }
+    ]
+}
