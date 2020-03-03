@@ -206,7 +206,7 @@ class Cangjie {
                     const second = parseIds(chars)
                     return this.placeDouble([first], [second], 0, op.first, op.second)
                 }
-                else return this.components[ch] || this.parseCodes(decompositions[ch].split(''))
+                else return this.components[ch] || this.parseCodes(this.decompositions[ch].split(''))
             }
             if(chars.length == 3) {
                 const op = idsPlacements[chars[1]]
