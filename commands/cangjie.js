@@ -178,8 +178,8 @@ function parseCodes(codes) {
     } else if(codes.length == 3) {
         const first = getComponentsByCode(codes[0] + codes[1])
         const second = getComponentsByCode(codes[1] + codes[2])
-        return placeDouble(getComponentsByCode(codes[0]), second.length ? second : [parseCodes(codes.slice(1))], alt)
-                || placeDouble(first.length ? first : [parseCodes(codes.slice(0, 2))], getComponentsByCode(codes[2]), alt)
+        return placeDouble(first.length ? first : [parseCodes(codes.slice(0, 2))], getComponentsByCode(codes[2]), alt)
+                || placeDouble(getComponentsByCode(codes[0]), second.length ? second : [parseCodes(codes.slice(1))], alt)
     } else if(codes.length == 2) {
         return placeDouble(getComponentsByCode(codes[0]), getComponentsByCode(codes[1]), alt)
     }
@@ -194,6 +194,7 @@ function placeDouble(firsts, seconds, alt) {
     if(firsts === undefined || seconds === undefined) return undefined
 
     const pairs = [
+        ['surroundtop', 'surrounded', {x: 0, y: 0, width: 1, height: 1}, {x: 0.25, y: 0.5, width: 0.5, height: 0.5}, {right: true, bottomfourths: true}],
         ['left', 'right', {x: 0, y: 0, width: 0.33, height: 1}, {x: 0.33, y: 0, width: 0.66, height: 1}, {bottom: true, bottomfourths: true}],
         ['top', 'bottom', {x: 0, y: 0, width: 1, height: 0.5}, {x: 0, y: 0.5, width: 1, height: 0.5}, {right: true}],
         ['topfourths', 'bottomfourths', {x: 0, y: 0, width: 1, height: 0.33}, {x: 0, y: 0.33, width: 1, height: 0.66}, {}],
@@ -209,7 +210,11 @@ function placeDouble(firsts, seconds, alt) {
     const combine = (firsts, seconds, a, b, placement={}) => {
         let firstAlt = 0
         let secondAlt = 0
-        for(let i = 0 ; i < alt ; i++) (i % 2 == 0 && firsts.length > firstAlt-1) ? firstAlt++ : (seconds.length > secondAlt-1) ? secondAlt++ : 0
+        for(let i = 0 ; i < alt ; i++) {
+            if(i % 2 == 0 && firsts.length-1 > firstAlt) firstAlt++
+            else if(seconds.length-1 > secondAlt) secondAlt++
+            else return null
+        }
 
         return {
             components: [
@@ -222,7 +227,8 @@ function placeDouble(firsts, seconds, alt) {
 
     for(candidate of candidates) {
         if(candidate[0][0].length > 0 && candidate[1][0].length > 0) {
-            return combine(candidate[0][0], candidate[1][0], candidate[0][1], candidate[1][1], candidate[2])
+            const result = combine(candidate[0][0], candidate[1][0], candidate[0][1], candidate[1][1], candidate[2])
+            if(result) return result
         }
     }
 

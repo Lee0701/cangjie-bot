@@ -5,7 +5,8 @@
         "bottomfourths": true,
         "right": true,
         "lefthalf": true,
-        "righthalf": true
+        "righthalf": true,
+        "surrounded": true
     },
     "padding": {
         "left": "0.0625",

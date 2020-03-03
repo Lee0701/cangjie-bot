@@ -21,9 +21,9 @@
         },
         {
             "parent": "月",
-            "x": "0.4",
+            "x": "0.5",
             "y": "0",
-            "width": "0.6",
+            "width": "0.5",
             "height": "1",
             "padding": {
                 "left": "parent / 2",

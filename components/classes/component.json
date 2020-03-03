@@ -16,7 +16,8 @@
         "surroundtop": false,
         "surroundtopleft": false,
         "surroundtopright": false,
-        "surroundbottomleft": false
+        "surroundbottomleft": false,
+        "surrounded": false
     },
     "padding": {
         "left": "0",

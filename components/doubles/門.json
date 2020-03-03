@@ -1,0 +1,21 @@
+{
+    "code": "AN",
+    "char": "門",
+    "ids": "門",
+    "parent": "basic",
+    "placement": {
+        "left": true,
+        "right": true,
+        "surroundtop": true
+    },
+    "paths": [
+        "M 0 0 v 1 Z",
+        "M 0 0 h 0.375 v 0.375 Z",
+        "M 0 0.1875 h 0.375 Z",
+        "M 0 0.375 h 0.375 Z",
+        "M 0.625 0 v 0.375 Z",
+        "M 0.625 0 h 0.375 v 1 h -0.125 Z",
+        "M 0.625 0.1875 h 0.375 Z",
+        "M 0.625 0.375 h 0.375 Z"
+    ]
+}
