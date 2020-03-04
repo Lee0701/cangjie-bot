@@ -35,6 +35,7 @@ class Cangjie {
                 .toString()
                 .split('\n')
                 .map(line => line.split('\t'))
+                .filter(line => !line[1].startsWith('X'))
                 .reduce(reduceToObject, {})
     }
 
@@ -213,18 +214,19 @@ class Cangjie {
                 if(op) {
                     const first = parseIds(chars)
                     const second = parseIds(chars)
-                    return this.placeDouble([first], [second], 0, op.first, op.second)
+                    return [this.placeDouble(first, second, 0, op.first, op.second)]
                 }
                 else {
-                    if(this.components[ch]) return ch
-                    else return this.parseCodes(this.decompositions[ch].split(''))
+                    if(this.decompositions[ch]) return this.getComponentsByCode(this.decompositions[ch])
+                    if(this.components[ch]) return [ch]
+                    else return []
                 }
             }
             if(chars.length == 3) {
                 const op = idsPlacements[chars[1]]
-                if(op) return this.placeDouble([parseIds(chars.slice(0, 1))], [parseIds(chars.slice(2))], 0, op.first, op.second)
+                if(op) return this.placeDouble(parseIds(chars.slice(0, 1)), parseIds(chars.slice(2)), 0, op.first, op.second)
             }
-            return parseIds(chars)
+            return this.placeSingle(parseIds(chars))
         }
     }
 
@@ -270,12 +272,12 @@ class Cangjie {
         return null
     }
 
-    placeSingle(names, alt) {
+    placeSingle(names, alt=0) {
         return {parent: names[alt], x: 0, y: 0, width: 1, height: 1}
     }
 
     placeDouble(firsts, seconds, alt, firstPlacement=null, secondPlacement=null) {
-        if(firsts === undefined || seconds === undefined) return undefined
+        if(!firsts || !seconds) return undefined
 
         const placements = Object.keys(this.components)
                 .filter(component => this.isChildOf(component, 'placement'))
