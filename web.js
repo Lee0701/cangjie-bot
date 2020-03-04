@@ -35,6 +35,15 @@ app.get('/component/cangjie/:code/', (req, res) => {
     res.send(cangjie.parse(code))
 })
 
+app.post('/render/path/', (req, res) => {
+    const {paths} = req.body
+    const component = {
+        parent: 'basic',
+        paths: paths.split('\n')
+    }
+    res.send(render(component))
+})
+
 app.post('/render/json/', (req, res) => {
     const {component} = req.body
     res.send(render(JSON.parse(component)))

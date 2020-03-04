@@ -15,10 +15,20 @@
         <input type="text" placeholder="code">
         <button type="submit">Get</button>
     </form>
-    <form id="editor">
+    <div class="container">
         <img id="glyph-view"></img>
-        <textarea name="component" rows="20"></textarea>
-        <button type="submit">Render</button>
-    </form>
+        <div class="editors">
+            Component
+            <form id="editor">
+                <textarea name="component" rows="15"></textarea>
+                <button type="submit">Render</button>
+            </form>
+            Path
+            <form id="path-editor">
+                <textarea name="component" rows="10"></textarea>
+                <button type="submit">Render</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
