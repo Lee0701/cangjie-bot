@@ -213,7 +213,7 @@ class Cangjie {
                 if(op) {
                     const first = parseIds(chars)
                     const second = parseIds(chars)
-                    return [this.placeDouble(first, second, 0, op.first, op.second)]
+                    return [this.placeDouble(first, second, 0, op.first, op.second, ch != '+')]
                 }
                 else {
                     if(this.decompositions[ch]) return this.getComponentsByCode(this.decompositions[ch])
@@ -223,7 +223,7 @@ class Cangjie {
             }
             if(chars.length == 3) {
                 const op = idsPlacements[chars[1]]
-                if(op) return this.placeDouble(parseIds(chars.slice(0, 1)), parseIds(chars.slice(2)), 0, op.first, op.second)
+                if(op) return this.placeDouble(parseIds(chars.slice(0, 1)), parseIds(chars.slice(2)), 0, op.first, op.second, chars[1] != '+')
             }
             return this.placeSingle(parseIds(chars))
         }
@@ -275,7 +275,7 @@ class Cangjie {
         return names.sort((a, b) => this.getComponentProperty(a, 'priority') - this.getComponentProperty(b, 'priority'))[alt]
     }
 
-    placeDouble(firsts, seconds, alt, firstPlacement=null, secondPlacement=null) {
+    placeDouble(firsts, seconds, alt, firstPlacement=null, secondPlacement=null, force=false) {
         if(!firsts || !seconds) return undefined
 
         const placements = Object.keys(this.components)
@@ -286,9 +286,9 @@ class Cangjie {
 
         const candidates = available.map(placement => ({
             placement: placement,
-            firsts: firsts.filter(c => this.getComponentProperty(c, 'placement.' + placement))
+            firsts: firsts.filter(c => this.getComponentProperty(c, 'placement.' + placement) || force)
                     .sort((a, b) => this.getComponentProperty(a, 'priority') - this.getComponentProperty(b, 'priority')),
-            seconds: seconds.filter(c => this.getComponentProperty(c, 'placement.' + this.getComponentProperty(placement, 'pair')))
+            seconds: seconds.filter(c => this.getComponentProperty(c, 'placement.' + this.getComponentProperty(placement, 'pair')) || force)
                     .sort((a, b) => this.getComponentProperty(a, 'priority') - this.getComponentProperty(b, 'priority'))
         }))
 
