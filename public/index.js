@@ -30,6 +30,16 @@ $(document).ready(function() {
             alert('JSON parse error')
         }
     })
+    $('#write').click(function(event) {
+        $.post({
+            url: '/write',
+            data: {component: $('#editor > textarea').val()},
+            success: (data) => {
+                if(data.error) alert(data.error)
+                else alert('Success')
+            }
+        })
+    })
 
     const render = function() {
         $.post({

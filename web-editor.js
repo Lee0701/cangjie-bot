@@ -6,6 +6,10 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const {Liquid} = require('liquidjs')
 
+const path = require('path')
+const fs = require('fs')
+const mkdirp = require('mkdirp')
+
 const cangjie = Cangjie.DEFAULT
 
 class WebEditor {
@@ -55,6 +59,36 @@ class WebEditor {
         app.get('/render/code/:code', (req, res) => {
             const {code} = req.params
             res.send(this.render(code))
+        })
+
+        app.post('/write/', (req, res) => {
+            const searchFile = (dir, file) => {
+                if(!fs.lstatSync(dir).isDirectory()) return null
+                const files = fs.readdirSync(dir)
+                if(files.includes(file)) return dir
+                for(let f of files) {
+                    const result = searchFile(path.join(dir, f), file)
+                    if(result) return result
+                }
+                return null
+            }
+            try {
+                const component = JSON.parse(req.body.component)
+                const componentsDir = 'cangjie/components'
+                const fileName = component.name + '.json'
+                if(component.name) {
+                    const dir = searchFile(componentsDir, fileName) || path.join(componentsDir, 'unclassified')
+                    const file = path.join(dir, fileName)
+                    console.log('Writing ' + file)
+                    mkdirp.sync(dir)
+                    fs.writeFileSync(file, JSON.stringify(component, null, 4))
+                    res.send('Success')
+                } else {
+                    res.send({error: 'Component name missing'})
+                }
+            } catch(e) {
+                res.send({error: e.toString()})
+            }
         })
         
         this.app = app
