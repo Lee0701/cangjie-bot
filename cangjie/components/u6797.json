@@ -10,11 +10,11 @@
     "components": [
         {
             "parent": "lefthalf",
-            "components": ["木L"]
+            "components": ["u6728-01"]
         },
         {
             "parent": "righthalf",
-            "components": ["木"]
+            "components": ["u6728"]
         }
     ]
 }

@@ -267,7 +267,7 @@ class Cangjie {
     }
 
     placeSingle(names, alt=0) {
-        return {parent: names[alt], x: 0, y: 0, width: 1, height: 1}
+        return {parent: names.sort((a, b) => this.getComponentProperty(a, 'priority') - this.getComponentProperty(b, 'priority'))[alt], x: 0, y: 0, width: 1, height: 1}
     }
 
     placeDouble(firsts, seconds, alt, firstPlacement=null, secondPlacement=null) {

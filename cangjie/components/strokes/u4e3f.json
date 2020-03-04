@@ -3,6 +3,7 @@
     "char": "丿",
     "ids": "丿",
     "parent": "stroke",
+    "priority": 200,
     "paths": [
         "M 0.5 0 Q 0.5 0.625, 0 1 Z"
     ]

@@ -63,12 +63,13 @@ app.get('/render/code/:code', (req, res) => {
 app.listen(port)
 
 function render(component) {
-    const {width, height} = cangjie
+    const width = 128
+    const height = 128
 
     const canvas = Canvas.createCanvas(width, height)
     const ctx = canvas.getContext('2d')
     ctx.strokeStyle = 'black'
-    ctx.lineWidth = 4
+    ctx.lineWidth = 6
     ctx.lineCap = 'square'
 
     cangjie.render(ctx, cangjie.makeRoot(component), 0, 0, width, height)

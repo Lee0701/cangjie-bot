@@ -6,6 +6,7 @@
     "placement": {
         "left": true
     },
+    "priority": 200,
     "padding": {
         "left": "parent * 3",
         "right": "parent * 3"
