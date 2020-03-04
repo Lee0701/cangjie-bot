@@ -20,8 +20,7 @@ module.exports = {
 
         parsed.forEach(obj => {
             if(!obj) return
-            else if(typeof obj === 'string') cangjie.renderWithOutline(ctx, obj.charAt(0), 0, 0, width, height)
-            else if(typeof obj === 'object') cangjie.renderWithOutline(ctx, {parent: 'root', components: [obj]}, 0, 0, width, height)
+            cangjie.renderWithOutline(ctx, cangjie.makeRoot(obj), 0, 0, width, height)
         })
         const png = canvas.toBuffer()
 

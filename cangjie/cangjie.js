@@ -39,24 +39,25 @@ class Cangjie {
     }
 
     getComponentsByCode(code) {
-        return Object.values(this.components).filter(component => component.code === code)
+        return Object.entries(this.components).filter(entry => entry[1].code === code).map(entry => entry[0])
     }
 
     matchComponentsByCode(code) {
         const exactMatch = this.getComponentsByCode(code)
         if(exactMatch.length) return exactMatch
-        return Object.values(this.components).filter(component => {
-            if(!component.code) return false
-            if(component.code.length >= 3) {
-                if(code.length == 2) return component.code.startsWith(code.substring(0, 1))
-                        && component.code.endsWith(code.substring(1))
-                else if(code.length == 3) return component.code.startsWith(code.substring(0, 2))
-                        && component.code.endsWith(code.substring(2))
-            } else if(component.code.length == 2) {
-                if(code.length == 2) return component.code == code
+        return Object.entries(this.components).filter(entry => {
+            const component = entry[1]
+            if(!entry.code) return false
+            if(entry.code.length >= 3) {
+                if(code.length == 2) return entry.code.startsWith(code.substring(0, 1))
+                        && entry.code.endsWith(code.substring(1))
+                else if(code.length == 3) return entry.code.startsWith(code.substring(0, 2))
+                        && entry.code.endsWith(code.substring(2))
+            } else if(entry.code.length == 2) {
+                if(code.length == 2) return entry.code == code
             }
             return false
-        })
+        }).map(entry => entry[0])
     }
 
     isChildOf(component, parentName) {
@@ -91,16 +92,16 @@ class Cangjie {
         else return parent
     }
 
-    renderWithOutline(ctx, name, x, y, width, height) {
+    renderWithOutline(ctx, component, x, y, width, height) {
         ctx.strokeStyle = 'white'
         ctx.lineWidth = this.lineWidth * 2
         ctx.lineCap = 'round'
-        this.render(ctx, name, x, y, width, height)
+        this.render(ctx, component, x, y, width, height)
 
         ctx.strokeStyle = 'black'
         ctx.lineWidth = this.lineWidth
         ctx.lineCap = 'square'
-        this.render(ctx, name, x, y, width, height)
+        this.render(ctx, component, x, y, width, height)
     }
 
     render(ctx, component, x, y, width, height) {
@@ -174,6 +175,14 @@ class Cangjie {
                 }
             }
         })
+    }
+
+    makeRoot(component) {
+        return {parent: 'root', components: [component]}
+    }
+
+    get(code) {
+        return this.components[code]
     }
 
     parse(str) {
