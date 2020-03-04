@@ -247,7 +247,7 @@ class Cangjie {
             const threeOne = this.placeDouble(first.length ? first : [this.parseCodes(codes.slice(0, 3))], this.getComponentsByCode(codes[3]), alt)
 
             if(alt == 0) {
-                return oneThree || twoTwo || threeOne
+                return twoTwo || oneThree || threeOne
             } else if(oneThree) {
                 return this.placeDouble(this.getComponentsByCode(codes[0]), second.length ? second : [this.parseCodes(codes.slice(1))], alt-1)
                         || this.placeDouble(halfFirst.length ? halfFirst : [this.parseCodes(codes.slice(0, 2))], halfSecond.length ? halfSecond : [this.parseCodes(codes.slice(2))], alt-1)

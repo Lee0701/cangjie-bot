@@ -1,0 +1,22 @@
+{
+    "code": "WR",
+    "char": "回",
+    "ids": "回",
+    "parent": "composite",
+    "components": [
+        {
+            "parent": "surroundcenter",
+            "components": ["囗"]
+        },
+        {
+            "parent": "surroundedcenter",
+            "padding": {
+                "top": "0.125",
+                "bottom": "0.125",
+                "left": "0.125",
+                "right": "0.125"
+            },
+            "components": ["口"]
+        }
+    ]
+}

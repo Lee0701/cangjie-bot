@@ -28,11 +28,8 @@ $(document).ready(function() {
     })
     $('#path-editor').submit(function(event) {
         event.preventDefault()
-        $.post({
-            url: '/render/path',
-            data: {paths: $('#path-editor > textarea').val()},
-            success: (data) => $('#glyph-view').removeAttr('src').attr('src', 'data:image/png;base64,' + data)
-        })
+        $('#editor > textarea').val(JSON.stringify({parent: 'basic', paths: $('#path-editor > textarea').val().split('\n')}, null, 4))
+        render()
     })
 
     const render = function() {

@@ -1,0 +1,14 @@
+{
+    "code": "W",
+    "char": "囗",
+    "ids": "囗",
+    "parent": "basic",
+    "placement": {
+        "surroundcenter": true
+    },
+    "paths": [
+        "M 0 0 v 1 Z",
+        "M 0 0 h 1 V 1 Z",
+        "M 0 1 h 1 Z"
+    ]
+}
