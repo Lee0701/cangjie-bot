@@ -4,8 +4,8 @@ const Discord = require('discord.js')
 
 class DiscordBot {
     constructor(token, prefix) {
-        this.token = token || process.env.BOT_TOKEN
-        this.prefix = prefix || process.env.BOT_CMD_PREFIX || '!'
+        this.token = token
+        this.prefix = prefix || '!'
 
         this.client = new Discord.Client()
         this.client.commands = new Discord.Collection()
