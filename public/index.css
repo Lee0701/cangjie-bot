@@ -1,8 +1,12 @@
 
-#glyph-view {
+#glyph-view, #path-view {
     width: 512px;
     height: 512px;
     border: 1px solid black;
+}
+
+form > textarea, form > select, form > input {
+    width: 300px;
 }
 
 .container {

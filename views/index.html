@@ -4,6 +4,7 @@
     <meta name="viewport" content="initial-scale=1.0,user-scalable=no" />
     <link rel="stylesheet" href="/index.css" />
     <script src="/jquery.3.4.1.min.js"></script>
+    <script src="/safeEval.js"></script>
     <script src="/index.js"></script>
 </head>
 <body>
@@ -12,15 +13,25 @@
         <button type="submit">Get</button>
     </form>
     <div class="container">
-        <img id="glyph-view"></img>
+        <img id="glyph-view" style="display: block"></img>
+        <canvas id="path-view" style="display: none;"></canvas>
         <div class="editors">
             <form id="editor">
                 Component <button type="submit">Render</button><br>
-                <textarea name="component" rows="15"></textarea>
+                <textarea rows="15"></textarea>
             </form>
             <form id="path-editor">
-                Paths <button type="submit">Render</button><br>
-                <textarea name="component" rows="10"></textarea>
+                Paths <button type="submit">Render</button><button type="button" id="copy">Copy to Component</button>
+                <br>
+                <select size="10"></select>
+                <br>
+                <input type="text"></input>
+                <br>
+                <button id="path-apply">Apply</button>
+                <button id="path-add">+</button>
+                <button id="path-remove">-</button>
+                <button id="path-up">^</button>
+                <button id="path-down">v</button>
             </form>
         </div>
     </div>
