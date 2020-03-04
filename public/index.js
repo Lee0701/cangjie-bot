@@ -1,20 +1,10 @@
 
 $(document).ready(function() {
+
     $('#cangjie').submit(function(event) {
         event.preventDefault()
         $.ajax({
             url: '/component/cangjie/' + $('#cangjie > input').val(),
-            success: (data) => {
-                $('#editor > textarea').val(JSON.stringify(data, null, 4))
-                if(data.paths) $('#path-editor > textarea').val(data.paths.join('\n'))
-                render()
-            }
-        })
-    })
-    $('#code').submit(function(event) {
-        event.preventDefault()
-        $.ajax({
-            url: '/component/code/' + $('#code > input').val(),
             success: (data) => {
                 $('#editor > textarea').val(JSON.stringify(data, null, 4))
                 if(data.paths) $('#path-editor > textarea').val(data.paths.join('\n'))

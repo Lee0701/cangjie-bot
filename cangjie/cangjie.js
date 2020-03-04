@@ -22,7 +22,12 @@ class Cangjie {
     loadComponents() {
         const addFiles = (dir) => fs.readdirSync(dir).flatMap(file => {
             if(fs.lstatSync(path.join(dir, file)).isDirectory()) return addFiles(path.join(dir, file))
-            else if(file.endsWith('.json')) return [[file.replace('.json', ''), JSON.parse(fs.readFileSync(path.join(dir, file)))]]
+            else if(file.endsWith('.json')) {
+                const component = JSON.parse(fs.readFileSync(path.join(dir, file)))
+                const name = component.name || file.replace('.json', '')
+                component.name = name
+                return [[name, component]]
+            }
             else return []
         })
         this.components = addFiles(this.componentsDir).reduce(reduceToObject, {})
@@ -267,7 +272,7 @@ class Cangjie {
     }
 
     placeSingle(names, alt=0) {
-        return {parent: names.sort((a, b) => this.getComponentProperty(a, 'priority') - this.getComponentProperty(b, 'priority'))[alt], x: 0, y: 0, width: 1, height: 1}
+        return names.sort((a, b) => this.getComponentProperty(a, 'priority') - this.getComponentProperty(b, 'priority'))[alt]
     }
 
     placeDouble(firsts, seconds, alt, firstPlacement=null, secondPlacement=null) {

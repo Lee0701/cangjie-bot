@@ -3,6 +3,7 @@ require('dotenv').config()
 
 const DiscordBot = require('./discord-bot.js')
 const TelegramBot = require('./telegram-bot.js')
+const WebEditor = require('./web-editor.js')
 
 const webMode = process.env.WEB_MODE
 const port = process.env.PORT || 8080
@@ -13,7 +14,8 @@ const discordPrefix = process.env.DISCORD_BOT_CMD_PREFIX
 const telegramToken = process.env.TELEGRAM_BOT_TOKEN
 
 if(webMode == 'editor') {
-    require('./web.js')
+    const editor = new WebEditor()
+    editor.listen(port)
 } else if(webMode == 'empty') {
     const app = require('express')()
     app.get('/', (req, res) => {
