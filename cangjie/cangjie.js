@@ -67,14 +67,14 @@ class Cangjie {
     }
 
     getComponentParent(component) {
-        if(typeof component === 'string') component = this.components[component]
+        if(typeof component === 'string') component = this.get(component)
         if(component.parent) return component.parent
         if(component.parent === null) return null
         return 'component'
     }
 
     getComponentProperty(component, key) {
-        if(typeof component === 'string') component = this.components[component]
+        if(typeof component === 'string') component = this.get(component)
         if(!component) return undefined
         const result = key.split('.').reduce((a, c) => a && a[c], component)
         if(result === undefined) return this.getComponentProperty(this.getComponentParent(component), key)
@@ -82,7 +82,7 @@ class Cangjie {
     }
 
     evalComponentProperty(component, key) {
-        if(typeof component === 'string') component = this.components[component]
+        if(typeof component === 'string') component = this.get(component)
         if(!component) return undefined
         const value = key.split('.').reduce((a, c) => a && a[c], component)
         const parent = this.evalComponentProperty(this.getComponentParent(component), key)
@@ -168,8 +168,16 @@ class Cangjie {
         return {parent: 'root', components: [component]}
     }
 
-    get(code) {
-        return this.components[code]
+    get(component) {
+        return this.getByName(component) || this.getByChar(component)
+    }
+
+    getByName(name) {
+        return this.components[name]
+    }
+
+    getByChar(char) {
+        return Object.values(this.components).find(component => this.getComponentProperty(component, 'char') === char)
     }
 
     parse(str) {
@@ -204,7 +212,7 @@ class Cangjie {
                 }
                 else {
                     if(this.decompositions[ch]) return this.getComponentsByCode(this.decompositions[ch])
-                    if(this.components[ch]) return [ch]
+                    if(this.get(name)) return [ch]
                     else return []
                 }
             }
