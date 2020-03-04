@@ -2,7 +2,7 @@
     "code": "THBU",
     "char": "首",
     "ids": "首",
-    "parent": "basic",
+    "parent": "composite",
     "placement": {
         "top": true
     },

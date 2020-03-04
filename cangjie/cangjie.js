@@ -47,14 +47,14 @@ class Cangjie {
         if(exactMatch.length) return exactMatch
         return Object.entries(this.components).filter(entry => {
             const component = entry[1]
-            if(!entry.code) return false
-            if(entry.code.length >= 3) {
-                if(code.length == 2) return entry.code.startsWith(code.substring(0, 1))
-                        && entry.code.endsWith(code.substring(1))
-                else if(code.length == 3) return entry.code.startsWith(code.substring(0, 2))
-                        && entry.code.endsWith(code.substring(2))
-            } else if(entry.code.length == 2) {
-                if(code.length == 2) return entry.code == code
+            if(!component.code) return false
+            if(component.code.length >= 3) {
+                if(code.length == 2) return component.code.startsWith(code.substring(0, 1))
+                        && component.code.endsWith(code.substring(1))
+                else if(code.length == 3) return component.code.startsWith(code.substring(0, 2))
+                        && component.code.endsWith(code.substring(2))
+            } else if(component.code.length == 2) {
+                if(code.length == 2) return component.code == code
             }
             return false
         }).map(entry => entry[0])
@@ -298,7 +298,7 @@ class Cangjie {
             }
 
             return {
-                parent: "basic",
+                parent: 'composite',
                 components: [
                     {parent: firstPlacement, components: [firsts[firstAlt]]},
                     {parent: secondPlacement, components: [seconds[secondAlt]]},

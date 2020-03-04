@@ -2,7 +2,7 @@
     "code": "BB",
     "char": "朋",
     "ids": "朋",
-    "parent": "basic",
+    "parent": "composite",
     "components": [
         {
             "parent": "lefthalf",

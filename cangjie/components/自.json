@@ -2,7 +2,7 @@
     "code": "HBU",
     "char": "自",
     "ids": "自",
-    "parent": "basic",
+    "parent": "composite",
     "placement": {
         "top": true
     },

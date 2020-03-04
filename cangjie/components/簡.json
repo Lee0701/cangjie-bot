@@ -2,7 +2,7 @@
     "code": "HANA",
     "char": "簡",
     "ids": "簡",
-    "parent": "basic",
+    "parent": "composite",
     "components": [
         {
             "parent": "topthirds",

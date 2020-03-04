@@ -1,6 +1,5 @@
 {
-    "parent": "component",
-    "pair": "",
+    "parent": "basic",
     "padding": {
         "left": "0",
         "right": "0",

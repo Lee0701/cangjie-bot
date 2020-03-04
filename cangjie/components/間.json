@@ -2,7 +2,7 @@
     "code": "ANA",
     "char": "間",
     "ids": "間",
-    "parent": "basic",
+    "parent": "composite",
     "components": [
         {
             "parent": "surroundtop",

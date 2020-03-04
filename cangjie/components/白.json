@@ -2,7 +2,7 @@
     "code": "HA",
     "char": "白",
     "ids": "白",
-    "parent": "basic",
+    "parent": "composite",
     "placement": {
         "left": true,
         "top": true

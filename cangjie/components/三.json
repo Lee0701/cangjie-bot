@@ -2,7 +2,7 @@
     "code": "MMM",
     "char": "三",
     "ids": "三",
-    "parent": "basic",
+    "parent": "composite",
     "placement": {
         "top": true,
         "bottom": true

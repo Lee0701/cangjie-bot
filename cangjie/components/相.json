@@ -2,7 +2,7 @@
     "code": "DBU",
     "char": "相",
     "ids": "相",
-    "parent": "basic",
+    "parent": "composite",
     "components": [
         {
             "parent": "lefthalf",

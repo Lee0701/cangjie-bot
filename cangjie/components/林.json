@@ -2,7 +2,7 @@
     "code": "DD",
     "char": "林",
     "ids": "林",
-    "parent": "basic",
+    "parent": "composite",
     "placement": {
         "top": true,
         "topthirds": true
