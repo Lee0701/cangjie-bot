@@ -31,6 +31,13 @@ class TelegramBot {
             context.replyWithPhoto({source: png})
         })
 
+        this.bot.command('charset', (context) => {
+            context.reply(Object.values(cangjie.components)
+                    .filter(component => component.char)
+                    .map(component => component.char)
+                    .join(''))
+        })
+
     }
     launch() {
         this.bot.launch()

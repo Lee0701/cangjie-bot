@@ -7,7 +7,8 @@
         "lefthalf": true,
         "righthalf": true,
         "surroundedtop": true,
-        "surroundedcenter": true
+        "surroundedcenter": true,
+        "surroundedtopleft": true
     },
     "padding": {
         "left": "0.0625",

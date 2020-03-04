@@ -1,0 +1,16 @@
+{
+    "code": "AJ",
+    "char": "早",
+    "ids": "早",
+    "parent": "composite",
+    "components": [
+        {
+            "parent": "top",
+            "components": ["日"]
+        },
+        {
+            "parent": "bottom",
+            "components": ["十"]
+        }
+    ]
+}
