@@ -212,7 +212,7 @@ class Cangjie {
                 }
                 else {
                     if(this.decompositions[ch]) return this.getComponentsByCode(this.decompositions[ch])
-                    if(this.get(name)) return [ch]
+                    if(this.get(ch)) return [ch]
                     else return []
                 }
             }
