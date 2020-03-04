@@ -23,9 +23,9 @@ class Cangjie {
         const addFiles = (dir) => fs.readdirSync(dir).flatMap(file => {
             if(fs.lstatSync(path.join(dir, file)).isDirectory()) return addFiles(path.join(dir, file))
             else if(file.endsWith('.json')) {
-                const component = JSON.parse(fs.readFileSync(path.join(dir, file)))
+                let component = JSON.parse(fs.readFileSync(path.join(dir, file)))
                 const name = component.name || file.replace('.json', '')
-                component.name = name
+                component = Object.assign({name}, component)
                 return [[name, component]]
             }
             else return []

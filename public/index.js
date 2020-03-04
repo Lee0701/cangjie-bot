@@ -1,13 +1,15 @@
 
 $(document).ready(function() {
 
+    const indentLevel = 2
+
     $('#cangjie').submit(function(event) {
         event.preventDefault()
         $.ajax({
             url: '/component/cangjie/' + $('#cangjie > input').val(),
             success: (data) => {
-                $('#editor > textarea').val(JSON.stringify(data, null, 4))
-                if(data.paths) $('#path-editor > textarea').val(data.paths.join('\n'))
+                $('#editor > textarea').val(JSON.stringify(data, null, indentLevel))
+                $('#path-editor > textarea').val((data.paths || []).join('\n'))
                 render()
             }
         })
@@ -18,8 +20,15 @@ $(document).ready(function() {
     })
     $('#path-editor').submit(function(event) {
         event.preventDefault()
-        $('#editor > textarea').val(JSON.stringify({parent: 'basic', paths: $('#path-editor > textarea').val().split('\n')}, null, 4))
-        render()
+        try {
+            const component = JSON.parse($('#editor > textarea').val())
+            const paths = $('#path-editor > textarea').val()
+            if(paths !== '') component.paths = paths.split('\n')
+            $('#editor > textarea').val(JSON.stringify(component, null, indentLevel))
+            render()
+        } catch(e) {
+            alert('JSON parse error')
+        }
     })
 
     const render = function() {
