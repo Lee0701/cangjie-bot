@@ -4,6 +4,7 @@
     "ids": "目",
     "parent": "basic",
     "placement": {
+        "head": true,
         "left": true
     },
     "padding": {

@@ -8,6 +8,8 @@
         "bottom": false,
         "topthirds": false,
         "bottomthirds": false,
+        "head": false,
+        "foot": false,
         "left": false,
         "right": false,
         "lefthalf": false,

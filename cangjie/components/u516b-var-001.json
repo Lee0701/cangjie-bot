@@ -1,0 +1,22 @@
+{
+    "code": "C",
+    "char": "八",
+    "ids": "八",
+    "parent": "basic",
+    "placement": {
+        "bottom": false,
+        "bottomthirds": false,
+        "foot": true,
+        "right": true,
+        "lefthalf": false,
+        "righthalf": true,
+        "surroundedtop": false,
+        "surroundedcenter": false,
+        "surroundedtopleft": false
+    },
+    "priority": 300,
+    "paths": [
+        "M 0.25 0 L 0 1 Z",
+        "M 0.75 0 L 1 1 Z"
+    ]
+}
