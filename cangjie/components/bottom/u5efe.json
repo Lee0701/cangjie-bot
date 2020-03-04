@@ -1,11 +1,11 @@
 {
-    "name": "u8279",
+    "name": "u5efe",
     "code": "T",
-    "char": "艹",
-    "ids": "艹",
+    "char": "廾",
+    "ids": "廾",
     "parent": "noplacement",
     "placement": {
-        "topthirds": true
+        "bottom": true
     },
     "padding": {
         "top": "parent * 2",
@@ -13,7 +13,7 @@
     },
     "paths": [
         "M 0 0.5 h 1 Z",
-        "M 0.33 0 v 1 Z",
+        "M 0.33 0 q 0 0.875, -0.125 1 Z",
         "M 0.66 0 v 1 Z"
     ]
 }

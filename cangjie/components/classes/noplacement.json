@@ -1,0 +1,9 @@
+{
+    "parent": "component",
+    "padding": {
+        "left": "0.0625",
+        "right": "0.0625",
+        "top": "0.0625",
+        "bottom": "0.0625"
+    }
+}

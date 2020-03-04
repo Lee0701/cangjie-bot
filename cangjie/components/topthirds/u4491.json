@@ -1,11 +1,13 @@
 {
+    "name": "u4491",
     "code": "T",
     "char": "䒑",
     "ids": "䒑",
-    "parent": "basic",
+    "parent": "noplacement",
     "placement": {
         "topthirds": true
     },
+    "priority": 110,
     "padding": {
         "top": "parent * 2",
         "bottom": "parent * 2"

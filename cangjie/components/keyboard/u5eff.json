@@ -1,8 +1,9 @@
 {
+    "name": "u5eff",
     "code": "T",
     "char": "廿",
     "ids": "廿",
-    "parent": "basic",
+    "parent": "noplacement",
     "placement": {
         "top": true
     },

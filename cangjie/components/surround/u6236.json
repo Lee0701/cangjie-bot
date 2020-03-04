@@ -1,0 +1,20 @@
+{
+    "name": "u6236",
+    "code": "HS",
+    "char": "戶",
+    "ids": "戶",
+    "parent": "basic",
+    "placement": {
+        "surroundtopleft": true
+    },
+    "padding": {
+        "left": "parent * 3",
+        "right": "parent * 3"
+    },
+    "paths": [
+        "M 1 0 Q 0.25 0.0625, 0 0.0625 Z",
+        "M 0 0.125 h 1 v 0.25 Z",
+        "M 0 0.375 h 1 Z",
+        "M 0 0.0625 v 0.4375 q 0 0.25, -0.125 0.5 Z"
+    ]
+}
