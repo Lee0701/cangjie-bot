@@ -186,8 +186,10 @@ class Cangjie {
     }
 
     parse(str) {
+        const byName = this.getByName(str)
+        if(byName) return byName
         const chars = str.split('')
-        if(chars.every(ch => ch.toUpperCase() >= 'A' && ch.toUpperCase() <= 'Z')) {
+        if(chars.every(ch => ch >= 'A' && ch <= 'Z')) {
             return this.parseCodes(chars)
         } else {
             const idsPlacements = {

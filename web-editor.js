@@ -13,7 +13,9 @@ const mkdirp = require('mkdirp')
 const cangjie = Cangjie.DEFAULT
 
 class WebEditor {
-    constructor() {
+    constructor(allowWrite=false) {
+        this.allowWrite = allowWrite
+
         const app = express()
         const liquid = new Liquid()
         
@@ -25,8 +27,7 @@ class WebEditor {
         app.use(express.static('public'))
         
         app.get('/', (req, res) => {
-            const {width, height} = cangjie
-            res.render('index.html', {width, height})
+            res.render('index.html', {allowWrite})
         })
         
         app.get('/component/code/:code/', (req, res) => {
@@ -72,6 +73,10 @@ class WebEditor {
                 }
                 return null
             }
+            if(!this.allowWrite) {
+                res.send({error: 'Writing not allowed'})
+                return
+            }
             try {
                 const component = JSON.parse(req.body.component)
                 const componentsDir = 'cangjie/components'
@@ -82,6 +87,7 @@ class WebEditor {
                     console.log('Writing ' + file)
                     mkdirp.sync(dir)
                     fs.writeFileSync(file, JSON.stringify(component, null, 4))
+                    cangjie.loadComponents()
                     res.send('Success')
                 } else {
                     res.send({error: 'Component name missing'})
