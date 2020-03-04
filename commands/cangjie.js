@@ -5,8 +5,22 @@ const Discord = require('discord.js')
 
 const cangjie = Cangjie.DEFAULT
 
-const width = cangjie.width
-const height = cangjie.height
+const width = 128
+const height = 128
+const lineWidth = 6
+
+function renderWithOutline(ctx, component, x, y, width, height) {
+    ctx.strokeStyle = 'white'
+    ctx.lineWidth = lineWidth * 2
+    ctx.lineCap = 'round'
+    cangjie.render(ctx, component, x, y, width, height)
+
+    ctx.strokeStyle = 'black'
+    ctx.lineWidth = lineWidth
+    ctx.lineCap = 'square'
+    cangjie.render(ctx, component, x, y, width, height)
+}
+
 
 module.exports = {
     name: 'cangjie',
@@ -20,7 +34,7 @@ module.exports = {
 
         parsed.forEach(obj => {
             if(!obj) return
-            cangjie.renderWithOutline(ctx, cangjie.makeRoot(obj), 0, 0, width, height)
+            renderWithOutline(ctx, cangjie.makeRoot(obj), 0, 0, width, height)
         })
         const png = canvas.toBuffer()
 

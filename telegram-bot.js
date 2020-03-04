@@ -6,8 +6,8 @@ const Telegraf = require('telegraf')
 const commandParts = require('telegraf-command-parts')
 
 const cangjie = Cangjie.DEFAULT
-const width = cangjie.width
-const height = cangjie.height
+const width = 128
+const height = 128
 
 class TelegramBot {
     constructor(token) {
@@ -24,7 +24,10 @@ class TelegramBot {
     
             parsed.forEach(obj => {
                 if(!obj) return
-                cangjie.renderWithOutline(ctx, cangjie.makeRoot(obj), 0, 0, width, height)
+                ctx.strokeStyle = 'black'
+                ctx.lineWidth = 6
+                ctx.lineCap = 'square'
+                cangjie.render(ctx, cangjie.makeRoot(obj), 0, 0, width, height)
             })
             const png = canvas.toBuffer()
     

@@ -9,11 +9,9 @@ class Cangjie {
 
     static DEFAULT = new Cangjie()
 
-    constructor(componentsDir, width, height, lineWidth) {
+    constructor(componentsDir) {
         this.componentsDir = componentsDir || path.join(__dirname, 'components')
-        this.width = width || 128
-        this.height = height || 128
-        this.lineWidth = lineWidth || 6
+        
         this.components = {}
         this.decompositions = {}
 
@@ -91,18 +89,6 @@ class Cangjie {
         if(typeof value === 'string') return safeEval(value, {parent: parent})
         else if(value) return value
         else return parent
-    }
-
-    renderWithOutline(ctx, component, x, y, width, height) {
-        ctx.strokeStyle = 'white'
-        ctx.lineWidth = this.lineWidth * 2
-        ctx.lineCap = 'round'
-        this.render(ctx, component, x, y, width, height)
-
-        ctx.strokeStyle = 'black'
-        ctx.lineWidth = this.lineWidth
-        ctx.lineCap = 'square'
-        this.render(ctx, component, x, y, width, height)
     }
 
     render(ctx, component, x, y, width, height) {
