@@ -5,6 +5,7 @@
     "ids": "龺",
     "parent": "composite",
     "placement": {
+        "single": false,
         "left": true
     },
     "components": [

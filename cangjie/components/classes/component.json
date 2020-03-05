@@ -4,6 +4,7 @@
     "ids": "",
     "parent": null,
     "placement": {
+        "single": true,
         "top": false,
         "bottom": false,
         "topthirds": false,

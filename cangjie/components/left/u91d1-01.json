@@ -1,9 +1,11 @@
 {
+    "name": "u91d1-01",
     "code": "C",
     "char": "金",
     "ids": "金",
     "parent": "basic",
     "placement": {
+        "single": false,
         "left": true
     },
     "padding": {

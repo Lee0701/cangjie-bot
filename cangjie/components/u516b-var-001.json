@@ -1,9 +1,11 @@
 {
+    "name": "u516b-var-001",
     "code": "C",
     "char": "八",
     "ids": "八",
     "parent": "basic",
     "placement": {
+        "single": false,
         "bottom": false,
         "bottomthirds": false,
         "foot": true,

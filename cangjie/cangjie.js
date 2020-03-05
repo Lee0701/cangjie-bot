@@ -237,9 +237,10 @@ class Cangjie {
         
         const component = this.getComponentsByCode(codes.join(''))
         if(component && component.length > 0) {
-            return this.placeSingle(component, alt)
+            const single = this.placeSingle(component, alt)
+            if(single && single.length) return single
         }
-        else if(codes.length == 5) {
+        if(codes.length == 5) {
             const first = this.matchComponentsByCode(codes.slice(0, 2).join(''))
             const second = this.matchComponentsByCode(codes.slice(2).join(''))
             return this.placeDouble(first.length ? first : [this.parseCodes(codes.slice(0, 2))], second.length ? second : [this.parseCodes(codes.slice(2))], alt)
@@ -282,8 +283,9 @@ class Cangjie {
         return null
     }
 
-    placeSingle(names, alt=0) {
-        return names.sort((a, b) => this.getComponentProperty(a, 'priority') - this.getComponentProperty(b, 'priority'))[alt]
+    placeSingle(components, alt=0) {
+        return components.filter(component => this.getComponentProperty(component, 'placement.single'))
+                .sort((a, b) => this.getComponentProperty(a, 'priority') - this.getComponentProperty(b, 'priority'))[alt]
     }
 
     placeDouble(firsts, seconds, alt, firstPlacement=null, secondPlacement=null, force=false) {
