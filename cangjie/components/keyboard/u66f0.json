@@ -1,9 +1,12 @@
 {
+    "name": "u66f0",
     "code": "A",
     "char": "曰",
     "ids": "曰",
     "parent": "basic",
     "padding": {
+        "top": "parent * 2",
+        "bottom": "parent * 2",
         "left": "parent * 2",
         "right": "parent * 2"
     },

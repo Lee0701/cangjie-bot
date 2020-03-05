@@ -1,0 +1,24 @@
+{
+    "name": "u9fba",
+    "code": "JAJ",
+    "char": "龺",
+    "ids": "龺",
+    "parent": "composite",
+    "placement": {
+        "left": true
+    },
+    "components": [
+        {
+            "parent": "topthirds",
+            "components": [
+                "u5341"
+            ]
+        },
+        {
+            "parent": "bottomthirds",
+            "components": [
+                "u65e9"
+            ]
+        }
+    ]
+}

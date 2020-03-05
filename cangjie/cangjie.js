@@ -218,7 +218,7 @@ class Cangjie {
                     return [this.placeDouble(first, second, 0, op.first, op.second, ch != '+')]
                 }
                 else {
-                    if(this.decompositions[ch]) return this.getComponentsByCode(this.decompositions[ch])
+                    if(this.decompositions[ch]) return [this.parseCodes(this.decompositions[ch].split(''))]
                     if(this.get(ch)) return [ch]
                     else return []
                 }
@@ -248,6 +248,7 @@ class Cangjie {
             const second = this.matchComponentsByCode(codes.slice(1).join(''))
             const halfFirst = this.matchComponentsByCode(codes.slice(0, 2).join(''))
             const halfSecond = this.matchComponentsByCode(codes.slice(2).join(''))
+
             const oneThree = this.placeDouble(this.getComponentsByCode(codes[0]), second.length ? second : [this.parseCodes(codes.slice(1))], alt)
             const twoTwo = this.placeDouble(halfFirst.length ? halfFirst : [this.parseCodes(codes.slice(0, 2))], halfSecond.length ? halfSecond : [this.parseCodes(codes.slice(2))], alt)
             const threeOne = this.placeDouble(first.length ? first : [this.parseCodes(codes.slice(0, 3))], this.getComponentsByCode(codes[3]), alt)
@@ -263,10 +264,18 @@ class Cangjie {
                         || this.placeDouble(first.length ? first : [this.parseCodes(codes.slice(0, 3))], this.getComponentsByCode(codes[3]), alt-1)
             }
         } else if(codes.length == 3) {
-            const first = this.getComponentsByCode(codes[0] + codes[1])
-            const second = this.getComponentsByCode(codes[1] + codes[2])
-            return this.placeDouble(first.length ? first : [this.parseCodes(codes.slice(0, 2))], this.getComponentsByCode(codes[2]), alt)
-                    || this.placeDouble(this.getComponentsByCode(codes[0]), second.length ? second : [this.parseCodes(codes.slice(1))], alt)
+            const first = this.matchComponentsByCode(codes[0] + codes[1])
+            const second = this.matchComponentsByCode(codes[1] + codes[2])
+
+            const oneTwo = this.placeDouble(first.length ? first : [this.parseCodes(codes.slice(0, 2))], this.getComponentsByCode(codes[2]), alt)
+            const twoOne = this.placeDouble(this.getComponentsByCode(codes[0]), second.length ? second : [this.parseCodes(codes.slice(1))], alt)
+
+            if(alt == 0) {
+                return oneTwo || twoOne
+            } else {
+                return this.placeDouble(first.length ? first : [this.parseCodes(codes.slice(0, 2))], this.getComponentsByCode(codes[2]), alt-1)
+                || this.placeDouble(this.getComponentsByCode(codes[0]), second.length ? second : [this.parseCodes(codes.slice(1))], alt-1)
+            }
         } else if(codes.length == 2) {
             return this.placeDouble(this.getComponentsByCode(codes[0]), this.getComponentsByCode(codes[1]), alt)
         }
