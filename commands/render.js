@@ -1,11 +1,9 @@
 
 const CangjieLang = require('../cangjie/cangjie-lang.js')
-const Cangjie = require('../cangjie/cangjie.js')
 const Canvas = require('canvas')
 const Discord = require('discord.js')
 
 const cangjieLang = CangjieLang.DEFAULT
-const cangjie = Cangjie.DEFAULT
 const width = 128
 const height = 128
 const lineWidth = 6
