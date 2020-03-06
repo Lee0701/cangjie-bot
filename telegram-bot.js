@@ -66,6 +66,16 @@ class TelegramBot {
             context.replyWithPhoto({source: png})
         })
 
+        this.bot.command('get', (context) => {
+            const arg = context.state.command.args
+            context.reply(cangjieLang.data[arg] || 'No result')
+        })
+
+        this.bot.command('extract', (context) => {
+            const arg = context.state.command.args
+            context.reply(cangjieLang.extract(arg))
+        })
+
         this.bot.command('charset', (context) => {
             context.reply(Object.keys(cangjieLang.data).join(''))
         })

@@ -169,7 +169,7 @@ class CangjieCharacter {
 
 const combiners = {
     '+': [{x: 0, y: 0, w: 1, h: 1}, {x: 0, y: 0, w: 1, h: 1}],
-    '-': [{x: 0, y: 0, w: 0.45, h: 1}, {x: 0.6, y: 0, w: 0.45, h: 1}],
+    '-': [{x: 0, y: 0, w: 0.45, h: 1}, {x: 0.55, y: 0, w: 0.45, h: 1}],
     '|': [{x: 0, y: 0, w: 1, h: 0.5}, {x: 0, y: 0.5, w: 1, h: 0.5}],
     '=': [{x: 0, y: 0, w: 0.33, h: 1}, {x: 0.33, y: 0, w: 0.66, h: 1}],
     ';': [{x: 0, y: 0, w: 1, h: 0.30}, {x: 0, y: 0.34, w: 1, h: 0.66}],
@@ -208,6 +208,71 @@ class Cangjie {
             y = nums[3]
         }
         return {x, y, w, h}
+    }
+
+    extract(arr) {
+        if(typeof arr === 'string') arr = arr.split('')
+
+        const next = () => {
+            if(!arr.length) return null
+            while(arr[0] === ' ') arr.shift()
+            return arr.shift().toUpperCase()
+        }
+
+        const parseCombiner = () => {
+            const left = parseTerm()
+            const ch = next()
+            const c = combiners[ch]
+            if(c) {
+                const right = parseCombiner()
+                return left + ch + right
+            } else return left
+        }
+
+        const parseTerm = () => {
+            let ch = next()
+            if(ch === null) throw new Error()
+
+            let result = ''
+
+            if(ch >= '0' && ch <= '9') {
+                let from = ''
+                for( ; ch >= '0' && ch <= '9' ; ch = next()) from += ch
+                from = parseInt(from)
+                result += from
+            }
+            let to = -1
+            if(ch === '~') {
+                ch = next()
+                to = ''
+                for( ; ch >= '0' && ch <= '9' ; ch = next()) to += ch
+                to = parseInt(to)
+            }
+            if(to != -1) result += '~' + to
+
+            if(ch === '(') result += '(' + parseCombiner() + ')'
+            else {
+                let token = ch
+                while(arr.length && arr[0].toUpperCase() >= 'A' && arr[0].toUpperCase() <= 'Z') token += next()
+                if(this.data[token]) token = '(' + this.extract(this.data[token]) + ')'
+                result += token
+            }
+
+            if(arr[0] === '@') {
+                next()
+                const nums = []
+                while(arr.length && arr[0].toUpperCase() >= '0' && arr[0].toUpperCase() <= '9') {
+                    const num = parseInt(next())
+                    const denom = parseInt(next())
+                    nums.push(num)
+                    nums.push(denom)
+                }
+                result += '@' + nums.join('')
+            }
+            return result
+        }
+
+        return parseCombiner()
     }
     
     parse(arr) {
@@ -296,6 +361,9 @@ Cangjie.DEFAULT_DATA = {
     '人': 'T@591100+P@12341214',
     '入': 'T@12900010+HP@60114000',
     '丷': 'D=(Z-T)',
+    '火': 'LD@18141818+LD@18146818+人',
+    '木': '一@11000014+丨+T@12350014+P@12351214',
+    '木L': '一@11000014+丨+T@12120014+D@12141213',
 
     '月': '(WT@10110000+HVJ@90111000)+(H@90001013+H@90011023)',
 
