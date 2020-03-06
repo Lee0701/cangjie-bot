@@ -1,337 +1,95 @@
 
-const path = require('path')
-const fs = require('fs')
-const safeEval = require('safe-eval')
+const ALPHABETS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+const KEYMAP = '日月金木水火土竹戈十大中一弓人心手口尸廿山女田X卜Z'
+
+const COMBINATIONS = {
+    '日月': '明',
+    '日弓': '門',
+    '日弓日': '間',
+}
+
+const VARIATIONS = {
+    '日': ['曰'],
+    '金': ['釒'],
+    '水': ['氵'],
+    '竹': ['⺮'],
+    '田': ['囗'],
+    // '': [''],
+}
+
+const PLACEMENT_DEFAULT = ['-1', '|1', ';1', '=1', '#1', '^1', '/1', '\\1', '*1', '_1']
+const PLACEMENT_LEFT = ['=0']
+const PLACEMENTS = {
+    '日': [...PLACEMENT_DEFAULT, ...PLACEMENT_LEFT],
+    '釒': [...PLACEMENT_LEFT],
+    '氵': [...PLACEMENT_LEFT],
+    '門': [...PLACEMENT_DEFAULT, '^0'],
+    '⺮': [';0'],
+    '囗': ['#0'],
+}
+
+const getKey = (keyCode) => KEYMAP[ALPHABETS.indexOf(keyCode)]
+const getCombination = (chars) => COMBINATIONS[chars] ? [COMBINATIONS[chars]] : []
+const matchCombination = (chars) => {
+    if(chars.length == 2) {
+        return Object.entries(COMBINATIONS)
+                .filter(c => c[0].startsWith(chars.charAt(0)) && c[0].endsWith(chars.charAt(1)))
+                .map(c => c[1])
+    } else if(chars.length == 3) {
+        return Object.entries(COMBINATIONS)
+                .filter(c => c[0].startsWith(chars.slice(0, 2)) && c[0].endsWith(chars.charAt(2)))
+                .map(c => c[1])
+    } else return getCombination(chars)
+}
+const getVariations = (ch) => [ch, ...(VARIATIONS[ch] || [])]
+const getPlacement = (ch) => PLACEMENTS[ch] || PLACEMENT_DEFAULT
 
 const reduceToObject = (a, c) => (a[c[0]] = c[1], a)
 
 class Cangjie {
+    constructor() {
 
-    static DEFAULT = new Cangjie()
-
-    constructor(componentsDir) {
-        this.componentsDir = componentsDir || path.join(__dirname, 'components')
-        
-        this.components = {}
-        this.decompositions = {}
-
-        this.loadComponents()
-        this.loadDecompositions()
     }
+    parse(code) {
+        if(typeof code === 'string') code = code.split('')
+        const chars = code.map(c => getKey(c))
 
-    loadComponents() {
-        const addFiles = (dir) => fs.readdirSync(dir).flatMap(file => {
-            if(fs.lstatSync(path.join(dir, file)).isDirectory()) return addFiles(path.join(dir, file))
-            else if(file.endsWith('.json')) {
-                let component = JSON.parse(fs.readFileSync(path.join(dir, file)))
-                const name = component.name || file.replace('.json', '')
-                component = Object.assign({name}, component)
-                return [[name, component]]
-            }
-            else return []
-        })
-        this.components = addFiles(this.componentsDir).reduce(reduceToObject, {})
-    }
-
-    loadDecompositions() {
-        this.decompositions = fs.readFileSync('cangjie-list.txt')
-                .toString()
-                .split('\n')
-                .map(line => line.split('\t'))
-                .filter(line => !line[1].startsWith('X'))
-                .reduce(reduceToObject, {})
-    }
-
-    getComponentsByCode(code) {
-        return Object.entries(this.components).filter(entry => entry[1].code === code).map(entry => entry[0])
-    }
-
-    matchComponentsByCode(code) {
-        const exactMatch = this.getComponentsByCode(code)
-        if(exactMatch.length) return exactMatch
-        return Object.entries(this.components).filter(entry => {
-            const component = entry[1]
-            if(!component.code) return false
-            if(component.code.length >= 3) {
-                if(code.length == 2) return component.code.startsWith(code.substring(0, 1))
-                        && component.code.endsWith(code.substring(1))
-                else if(code.length == 3) return component.code.startsWith(code.substring(0, 2))
-                        && component.code.endsWith(code.substring(2))
-            } else if(component.code.length == 2) {
-                if(code.length == 2) return component.code == code
-            }
-            return false
-        }).map(entry => entry[0])
-    }
-
-    isChildOf(component, parentName) {
-        const parent = this.getComponentParent(component)
-        if(!parent) return false
-        if(typeof parent === 'string' && parent === parentName) return true
-        else return this.isChildOf(parent, parentName)
-    }
-
-    getComponentParent(component) {
-        if(typeof component === 'string') component = this.get(component)
-        if(component.parent) return component.parent
-        if(component.parent === null) return null
-        return 'component'
-    }
-
-    getComponentProperty(component, key) {
-        if(typeof component === 'string') component = this.get(component)
-        if(!component) return undefined
-        const result = key.split('.').reduce((a, c) => a && a[c], component)
-        if(result === undefined) return this.getComponentProperty(this.getComponentParent(component), key)
-        else return result
-    }
-
-    evalComponentProperty(component, key) {
-        if(typeof component === 'string') component = this.get(component)
-        if(!component) return undefined
-        const value = key.split('.').reduce((a, c) => a && a[c], component)
-        const parent = this.evalComponentProperty(this.getComponentParent(component), key)
-        if(typeof value === 'string') return safeEval(value, {parent: parent})
-        else if(value) return value
-        else return parent
-    }
-
-    render(ctx, component, x, y, width, height) {
-        if(!component) return
-
-        const padding = ['left', 'right', 'top', 'bottom']
-                .map(key => 'padding.' + key)
-                .map(key => [key.replace('padding.', ''), this.evalComponentProperty(component, key)])
-                .reduce(reduceToObject, {})
-        
-        const offX = this.evalComponentProperty(component, "x") * width + x
-        const offY = this.evalComponentProperty(component, "y") * height + y
-        const widthScale = this.evalComponentProperty(component, "width")
-        const heightScale = this.evalComponentProperty(component, "height")
-        
-        const actualWidth = width*widthScale
-        const actualHeight = height*heightScale
-
-        padding.left *= actualWidth
-        padding.right *= actualWidth
-        padding.top *= actualHeight
-        padding.bottom *= actualHeight
-
-        const innerWidth = actualWidth - padding.left - padding.right
-        const innerHeight = actualHeight - padding.top - padding.bottom
-
-        const getX = (x) => offX + padding.left + x * innerWidth
-        const getY = (y) => offY + padding.top + y * innerHeight
-
-        const components = this.getComponentProperty(component, 'components')
-        if(components) components.forEach(component => {
-            this.render(ctx, component, offX + padding.left, offY + padding.top, innerWidth, innerHeight)
-        })
-
-        const paths = this.getComponentProperty(component, 'paths')
-        const startStroke = this.evalComponentProperty(component, 'startstroke')
-        const endStroke = this.evalComponentProperty(component, 'endstroke')
-        if(paths) paths.slice(startStroke, endStroke).forEach(path => {
-            const cmds = path.split(/[,]?[ ]+/)
-            let x = 0
-            let y = 0
-
-            while(cmds.length > 0) {
-                const cmd = cmds.shift()
-                if(cmd === 'Z') {
-                    ctx.stroke()
-                } else if(cmd === 'M') {
-                    ctx.moveTo(getX(x = safeEval(cmds.shift())), getY(y = safeEval(cmds.shift())))
-                } else if(cmd === 'm') {
-                    ctx.moveTo(getX(x += safeEval(cmds.shift())), getY(y += safeEval(cmds.shift())))
-                } else if(cmd === 'L') {
-                    ctx.lineTo(getX(x = safeEval(cmds.shift())), getY(y = safeEval(cmds.shift())))
-                } else if(cmd === 'l') {
-                    ctx.lineTo(getX(x += safeEval(cmds.shift())), getY(y += safeEval(cmds.shift())))
-                } else if(cmd === 'H') {
-                    ctx.lineTo(getX(x = safeEval(cmds.shift())), getY(y))
-                } else if(cmd === 'h') {
-                    ctx.lineTo(getX(x += safeEval(cmds.shift())), getY(y))
-                } else if(cmd === 'V') {
-                    ctx.lineTo(getX(x), getY(y = safeEval(cmds.shift())))
-                } else if(cmd === 'v') {
-                    ctx.lineTo(getX(x), getY(y += safeEval(cmds.shift())))
-                } else if(cmd === 'Q') {
-                    ctx.quadraticCurveTo(getX(safeEval(cmds.shift())), getY(safeEval(cmds.shift())), getX(x = safeEval(cmds.shift())), getY(y = safeEval(cmds.shift())))
-                } else if(cmd === 'q') {
-                    ctx.quadraticCurveTo(getX(x + safeEval(cmds.shift())), getY(y + safeEval(cmds.shift())), getX(x += safeEval(cmds.shift())), getY(y += safeEval(cmds.shift())))
-                } else if(cmd === 'C') {
-                    ctx.bezierCurveTo(getX(safeEval(cmds.shift())), getY(safeEval(cmds.shift())), getX(safeEval(cmds.shift())), getY(safeEval(cmds.shift())), getX(x += safeEval(cmds.shift())), getY(y += safeEval(cmds.shift())))
-                } else if(cmd === 'c') {
-                    ctx.bezierCurveTo(getX(x + safeEval(cmds.shift())), getY(y + safeEval(cmds.shift())), getX(x + safeEval(cmds.shift())), getY(y + safeEval(cmds.shift())), getX(x += safeEval(cmds.shift())), getY(y += safeEval(cmds.shift())))
-                }
-            }
-        })
-    }
-
-    makeRoot(component) {
-        return {parent: 'root', components: [component]}
-    }
-
-    get(component) {
-        return this.getByName(component) || this.getByChar(component)
-    }
-
-    getByName(name) {
-        return this.components[name]
-    }
-
-    getByChar(char) {
-        return Object.values(this.components).find(component => this.getComponentProperty(component, 'char') === char)
-    }
-
-    parse(str) {
-        const byName = this.getByName(str)
-        if(byName) return byName
-        const chars = str.split('')
-        if(chars.every(ch => ch >= 'A' && ch <= 'Z')) {
-            return this.parseCodes(chars)
-        } else {
-            const idsPlacements = {
-                '+': {first: null, second: null},
-                '-': {first: ['left', 'lefthalf'], second: ['right', 'righthalf']},
-                '|': {first: ['top', 'topthirds'], second: ['bottom', 'bottomthirds']},
-                '⿰': {first: ['left', 'lefthalf'], second: ['right', 'righthalf']},
-                '⿱': {first: ['top', 'topthirds'], second: ['bottom', 'bottomthirds']},
-                '⿲': {first: null, second: null},
-                '⿳': {first: null, second: null},
-                '⿴': {first: ['surroundcenter'], second: ['surrounded']},
-                '⿵': {first: ['surroundtop'], second: ['surrounded']},
-                '⿶': {first: ['surroundbottom'], second: ['surrounded']},
-                '⿷': {first: ['surroundleft'], second: ['surrounded']},
-                '⿸': {first: ['surroundtopleft'], second: ['surrounded']},
-                '⿹': {first: ['surroundtopright'], second: ['surrounded']},
-                '⿺': {first: ['surroundbottomleft'], second: ['surrounded']},
-                '⿻': {first: ['overlap'], second: ['overlap']},
-            }
-            const parseIds = (chars) => {
-                const ch = chars.shift()
-                const op = idsPlacements[ch]
-                if(op) {
-                    const first = parseIds(chars)
-                    const second = parseIds(chars)
-                    return [this.placeDouble(first, second, 0, op.first, op.second, ch != '+')]
-                }
-                else {
-                    if(this.decompositions[ch]) return [this.parseCodes(this.decompositions[ch].split(''))]
-                    if(this.get(ch)) return [ch]
-                    else return []
-                }
-            }
-            if(chars.length == 3) {
-                const op = idsPlacements[chars[1]]
-                if(op) return this.placeDouble(parseIds(chars.slice(0, 1)), parseIds(chars.slice(2)), 0, op.first, op.second, chars[1] != '+')
-            }
-            return this.placeSingle(parseIds(chars))
-        }
-    }
-
-    parseCodes(codes) {
         let alt = 0
-        for(alt = 0 ; codes[0] === 'X' ; alt++, codes.shift()) {}
+        for(alt = 0 ; chars[0] === 'X' ; alt++, chars.shift()) {}
+
+        const vars = chars.map(c => getVariations(c))
         
-        const component = this.getComponentsByCode(codes.join(''))
-        if(component && component.length > 0) {
-            const single = this.placeSingle(component, alt)
-            if(single && single.length) return single
+        if(chars.length === 5) {
+            return this.placeDouble(matchCombination(chars.slice(0, 2).join('')), matchCombination(chars.slice(2).join('')))[alt]
         }
-        if(codes.length == 5) {
-            const first = this.matchComponentsByCode(codes.slice(0, 2).join(''))
-            const second = this.matchComponentsByCode(codes.slice(2).join(''))
-            return this.placeDouble(first.length ? first : [this.parseCodes(codes.slice(0, 2))], second.length ? second : [this.parseCodes(codes.slice(2))], alt)
-        } else if(codes.length == 4) {
-            const first = this.matchComponentsByCode(codes.slice(0, 3).join(''))
-            const second = this.matchComponentsByCode(codes.slice(1).join(''))
-            const halfFirst = this.matchComponentsByCode(codes.slice(0, 2).join(''))
-            const halfSecond = this.matchComponentsByCode(codes.slice(2).join(''))
-
-            const oneThree = this.placeDouble(this.getComponentsByCode(codes[0]), second.length ? second : [this.parseCodes(codes.slice(1))], alt)
-            const twoTwo = this.placeDouble(halfFirst.length ? halfFirst : [this.parseCodes(codes.slice(0, 2))], halfSecond.length ? halfSecond : [this.parseCodes(codes.slice(2))], alt)
-            const threeOne = this.placeDouble(first.length ? first : [this.parseCodes(codes.slice(0, 3))], this.getComponentsByCode(codes[3]), alt)
-
-            if(alt == 0) {
-                return twoTwo || oneThree || threeOne
-            } else if(oneThree) {
-                return this.placeDouble(this.getComponentsByCode(codes[0]), second.length ? second : [this.parseCodes(codes.slice(1))], alt-1)
-                        || this.placeDouble(halfFirst.length ? halfFirst : [this.parseCodes(codes.slice(0, 2))], halfSecond.length ? halfSecond : [this.parseCodes(codes.slice(2))], alt-1)
-                        || this.placeDouble(first.length ? first : [this.parseCodes(codes.slice(0, 3))], this.getComponentsByCode(codes[3]), alt-1)
-            } else if(twoTwo) {
-                return this.placeDouble(halfFirst.length ? halfFirst : [this.parseCodes(codes.slice(0, 2))], halfSecond.length ? halfSecond : [this.parseCodes(codes.slice(2))], alt-1)
-                        || this.placeDouble(first.length ? first : [this.parseCodes(codes.slice(0, 3))], this.getComponentsByCode(codes[3]), alt-1)
-            }
-        } else if(codes.length == 3) {
-            const first = this.matchComponentsByCode(codes[0] + codes[1])
-            const second = this.matchComponentsByCode(codes[1] + codes[2])
-
-            const oneTwo = this.placeDouble(first.length ? first : [this.parseCodes(codes.slice(0, 2))], this.getComponentsByCode(codes[2]), alt)
-            const twoOne = this.placeDouble(this.getComponentsByCode(codes[0]), second.length ? second : [this.parseCodes(codes.slice(1))], alt)
-
-            if(alt == 0) {
-                return oneTwo || twoOne
-            } else {
-                return this.placeDouble(first.length ? first : [this.parseCodes(codes.slice(0, 2))], this.getComponentsByCode(codes[2]), alt-1)
-                || this.placeDouble(this.getComponentsByCode(codes[0]), second.length ? second : [this.parseCodes(codes.slice(1))], alt-1)
-            }
-        } else if(codes.length == 2) {
-            return this.placeDouble(this.getComponentsByCode(codes[0]), this.getComponentsByCode(codes[1]), alt)
+        else if(chars.length === 4) {
+            const oneThree = this.placeDouble(vars[0], matchCombination(chars.slice(1).join('')))
+            const twoTwo = this.placeDouble(matchCombination(chars.slice(0, 2).join('')), getCombination(chars.slice(0, 2).join('')))
+            return [...oneThree, ...twoTwo][alt]
+        } else if(chars.length === 3) {
+            const oneTwo = this.placeDouble(vars[0], getCombination(chars.slice(1).join('')))
+            const twoOne = this.placeDouble(getCombination(chars.slice(0, 2).join('')), vars[2])
+            return [...oneTwo, ...twoOne][alt]
         }
-        return null
+        else if(chars.length === 2) {
+            return this.placeDouble(vars[0], vars[1])[alt]
+        }
+        else if(chars.length === 1) {
+            return vars[0][alt]
+        }
     }
+    placeDouble(firsts, seconds) {
+        firsts = firsts.flatMap(ch => getPlacement(ch).filter(p => p.charAt(1) === '0').map(p => [ch, p.charAt(0)]))
+        seconds = seconds.flatMap(ch => getPlacement(ch).filter(p => p.charAt(1) === '1').map(p => [ch, p.charAt(0)]))
 
-    placeSingle(components, alt=0) {
-        return components.filter(component => this.getComponentProperty(component, 'placement.single'))
-                .sort((a, b) => this.getComponentProperty(a, 'priority') - this.getComponentProperty(b, 'priority'))[alt]
-    }
+        console.log(firsts, seconds)
 
-    placeDouble(firsts, seconds, alt, firstPlacement=null, secondPlacement=null, force=false) {
-        if(!firsts || !seconds) return undefined
-
-        const placements = Object.keys(this.components)
-                .filter(component => this.isChildOf(component, 'placement'))
-
-        const available = placements
-                .filter(placement => (!firstPlacement || firstPlacement.includes(placement)) && (!secondPlacement || secondPlacement.includes(this.getComponentProperty(placement, 'pair'))))
-
-        const candidates = available.map(placement => ({
-            placement: placement,
-            firsts: firsts.filter(c => this.getComponentProperty(c, 'placement.' + placement) || force)
-                    .sort((a, b) => this.getComponentProperty(a, 'priority') - this.getComponentProperty(b, 'priority')),
-            seconds: seconds.filter(c => this.getComponentProperty(c, 'placement.' + this.getComponentProperty(placement, 'pair')) || force)
-                    .sort((a, b) => this.getComponentProperty(a, 'priority') - this.getComponentProperty(b, 'priority'))
-        }))
-
-        const combine = (firsts, seconds, firstPlacement, secondPlacement) => {
-            let firstAlt = 0
-            let secondAlt = 0
-            for(let i = 0 ; i < alt ; i++) {
-                if(i % 2 == 0 && firsts.length-1 > firstAlt) firstAlt++
-                else if(seconds.length-1 > secondAlt) secondAlt++
-                else return null
-            }
-
-            return {
-                parent: 'composite',
-                components: [
-                    {parent: firstPlacement, components: [firsts[firstAlt]]},
-                    {parent: secondPlacement, components: [seconds[secondAlt]]},
-                ]
-            }
-        }
-
-        for(const candidate of candidates) {
-            if(candidate.firsts.length > 0 && candidate.seconds.length > 0) {
-                const result = combine(candidate.firsts, candidate.seconds, candidate.placement, this.getComponentProperty(candidate.placement, 'pair'))
-                if(result) return result
-            }
-        }
-
-        return null
+        return seconds.flatMap(second => {
+            return firsts.filter(first => first[1] === second[1]).map(first => first[0] + second[1] + second[0])
+        })
     }
 }
+
+Cangjie.DEFAULT = new Cangjie()
 
 module.exports = Cangjie

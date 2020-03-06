@@ -1,10 +1,10 @@
 
-const Cangjie = require('../cangjie/cangjie.js')
+const CangjieLang = require('./cangjie/cangjie-lang.js')
+const Cangjie = require('./cangjie/cangjie.js')
 const Canvas = require('canvas')
 const Discord = require('discord.js')
 
 const cangjie = Cangjie.DEFAULT
-
 const width = 128
 const height = 128
 const lineWidth = 6
@@ -29,16 +29,18 @@ module.exports = {
     execute(msg, args) {
         const parsed = args.map(arg => cangjie.parse(arg))
 
+        console.log(parsed)
+
         const canvas = Canvas.createCanvas(width, height)
         const ctx = canvas.getContext('2d')
 
-        parsed.forEach(obj => {
-            if(!obj) return
-            renderWithOutline(ctx, cangjie.makeRoot(obj), 0, 0, width, height)
-        })
-        const png = canvas.toBuffer()
+        // parsed.forEach(obj => {
+        //     if(!obj) return
+        //     renderWithOutline(ctx, cangjie.makeRoot(obj), 0, 0, width, height)
+        // })
+        // const png = canvas.toBuffer()
 
-        const attachment = new Discord.MessageAttachment(png, 'out.png')
-        msg.channel.send(attachment)
+        // const attachment = new Discord.MessageAttachment(png, 'out.png')
+        // msg.channel.send(attachment)
     },
 }
