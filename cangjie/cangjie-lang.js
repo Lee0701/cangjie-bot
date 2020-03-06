@@ -214,13 +214,14 @@ class Cangjie {
         if(typeof arr === 'string') arr = arr.split('')
 
         const next = () => {
-            if(!arr.length) return null
+            if(!arr.length) throw new Error()
             while(arr[0] === ' ') arr.shift()
             return arr.shift().toUpperCase()
         }
 
         const parseCombiner = () => {
             const left = parseTerm()
+            if(!arr.length) return left
             const ch = next()
             const c = combiners[ch]
             if(c) {
@@ -231,7 +232,6 @@ class Cangjie {
 
         const parseTerm = () => {
             let ch = next()
-            if(ch === null) throw new Error()
 
             let result = ''
 
@@ -279,13 +279,14 @@ class Cangjie {
         if(typeof arr === 'string') arr = arr.split('')
 
         const next = () => {
-            if(!arr.length) return null
+            if(!arr.length) throw new Error()
             while(arr[0] === ' ') arr.shift()
             return arr.shift().toUpperCase()
         }
 
         const parseCombiner = () => {
             const left = parseTerm()
+            if(!arr.length) return left
             const ch = next()
             const c = combiners[ch]
             if(c) {
@@ -296,8 +297,6 @@ class Cangjie {
 
         const parseTerm = () => {
             let ch = next()
-
-            if(ch === null) throw new Error()
 
             let from = 0
             if(ch >= '0' && ch <= '9') {

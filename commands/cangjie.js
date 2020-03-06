@@ -42,7 +42,7 @@ module.exports = {
             if(!ch) return
             console.log(ch)
             try {
-                renderWithOutline(cangjieLang.parse(ch), x, y, w, h)
+                renderWithOutline(ctx, cangjieLang.parse(ch), x, y, w, h)
             } catch(e) {
                 console.log(e)
             }

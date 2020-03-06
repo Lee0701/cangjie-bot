@@ -35,7 +35,7 @@ module.exports = {
         const ctx = canvas.getContext('2d')
 
         try {
-            renderWithOutline(cangjieLang.parse(args.join(' ')), x, y, w, h)
+            renderWithOutline(ctx, cangjieLang.parse(args.join(' ')), x, y, w, h)
         } catch(e) {
             console.log(e)
         }
