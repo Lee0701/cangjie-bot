@@ -19,7 +19,8 @@ const y = margin
 const w = width - margin*2
 const h = height - margin*2
 
-const dataFile = 'userdata.json'
+const dataFile = 'data.json'
+const userDataFile = 'userdata.json'
 
 class TelegramBot {
     constructor(token) {
@@ -92,7 +93,7 @@ class TelegramBot {
             if(name.charAt(0).toUpperCase() >= 'A' && name.charAt(0).toUpperCase() <= 'Z') {
                 context.reply('Name must not start with an alphabet')
             } else {
-                this.data[name] = args.join(' ')
+                this.userdata[name] = args.join(' ')
                 this.saveData()
                 this.loadCangjie()
                 context.reply('Submission done, name: ' + name)
@@ -108,18 +109,24 @@ class TelegramBot {
 
     loadCangjie() {
         try {
+            this.userdata = JSON.parse(fs.readFileSync(userDataFile).toString())
+        } catch(error) {
+            this.userdata = {}
+        }
+        try {
             this.data = JSON.parse(fs.readFileSync(dataFile).toString())
         } catch(error) {
             this.data = {}
         }
         const data = {}
-        Object.assign(data, this.data)
+        Object.assign(data, this.userdata)
         Object.assign(data, CangjieLang.DEFAULT_DATA)
+        Object.assign(data, this.data)
         this.cangjieLang = new CangjieLang(data)
     }
 
     saveData() {
-        fs.writeFileSync(dataFile, JSON.stringify(this.data, null, 4))
+        fs.writeFileSync(userDataFile, JSON.stringify(this.userdata, null, 4))
     }
     
 }
