@@ -1,7 +1,8 @@
 
+const CangjieLang = require('../cangjie/cangjie-lang.js')
 const Cangjie = require('../cangjie/cangjie.js')
 
-const cangjie = Cangjie.DEFAULT
+const cangjieLang = CangjieLang.DEFAULT
 
 module.exports = {
     name: 'charset',

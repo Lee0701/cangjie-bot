@@ -1,6 +1,6 @@
 
-const CangjieLang = require('./cangjie/cangjie-lang.js')
-const Cangjie = require('./cangjie/cangjie.js')
+const CangjieLang = require('../cangjie/cangjie-lang.js')
+const Cangjie = require('../cangjie/cangjie.js')
 const Canvas = require('canvas')
 const Discord = require('discord.js')
 
