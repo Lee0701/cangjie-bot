@@ -19,7 +19,7 @@ const y = margin
 const w = width - margin*2
 const h = height - margin*2
 
-const dataFile = 'data.json'
+const dataFile = 'userdata.json'
 
 class TelegramBot {
     constructor(token) {

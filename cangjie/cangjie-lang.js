@@ -273,13 +273,50 @@ class CangjieCharacter {
                 ctx.stroke()
             } else if(this.data === 'VH') {
                 ctx.moveTo(x, y)
-                ctx.lienTo(x, y + h)
+                ctx.lineTo(x, y + h)
                 ctx.lineTo(x + w, y + h)
+                ctx.stroke()
+            } else if(this.data === 'VA') {
+                ctx.moveTo(x, y)
+                ctx.bezierCurveTo(x, y + h, x, y + h, x + w, y + h)
+                ctx.stroke()
+            } else if(this.data === 'VAJ') {
+                ctx.moveTo(x, y)
+                ctx.bezierCurveTo(x, y + h, x, y + h, x + w, y + h)
+                ctx.lineTo(x + w, y + h - h/5)
+                ctx.stroke()
+            } else if(this.data === 'VHV') {
+                ctx.moveTo(x, y)
+                ctx.lineTo(x, y + h/2)
+                ctx.lineTo(x + w, y + h/2)
+                ctx.lineTo(x + w, y + h)
+                ctx.stroke()
+            } else if(this.data === 'VHT') {
+                ctx.moveTo(x, y)
+                ctx.lineTo(x, y + h/2)
+                ctx.lineTo(x + w, y + h/2)
+                ctx.quadraticCurveTo(x + w*4/5, y + h, x, y + h)
+                ctx.stroke()
+            } else if(this.data === 'VHTJ') {
+                ctx.moveTo(x, y)
+                ctx.lineTo(x, y + h/2)
+                ctx.lineTo(x + w, y + h/2)
+                ctx.quadraticCurveTo(x + w, y + h, x + w*4/5, y + h)
+                ctx.lineTo(x + w*3/5, y + h - h/10)
                 ctx.stroke()
             } else if(this.data === 'VJ') {
                 ctx.moveTo(x + w, y)
                 ctx.lineTo(x + w, y + h)
                 ctx.lineTo(x + w - w/5, y + h)
+                ctx.stroke()
+            } else if(this.data === 'VC') {
+                ctx.moveTo(x + w, y)
+                ctx.bezierCurveTo(x + w, y + h, x + w, y + h, x, y + h)
+                ctx.stroke()
+            } else if(this.data === 'VCJ') {
+                ctx.moveTo(x + w, y)
+                ctx.bezierCurveTo(x + w, y + h, x + w, y + h, x, y + h)
+                ctx.lineTo(x, y + h - h/5)
                 ctx.stroke()
             }
             ctx.closePath()
