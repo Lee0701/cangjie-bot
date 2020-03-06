@@ -7,6 +7,6 @@ module.exports = {
     name: 'charset',
     description: 'list of available characters',
     execute(msg, args) {
-        msg.channel.send(Object.keys(cangjieLang.data).join(''))
+        msg.channel.send(Object.keys(cangjieLang.data).join(' '))
     },
 }

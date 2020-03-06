@@ -83,7 +83,7 @@ class TelegramBot {
         })
 
         this.bot.command('charset', (context) => {
-            context.reply(Object.keys(this.cangjieLang.data).join(''))
+            context.reply(Object.keys(this.cangjieLang.data).join(' '))
         })
 
         this.bot.command('submit', (context) => {
