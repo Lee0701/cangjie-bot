@@ -88,7 +88,7 @@ class TelegramBot {
 
         this.bot.command('submit', (context) => {
             const args = context.state.command.args.split(' ')
-            const name = args.shift() + context.message.from.username.toUpperCase().replace(/\_/g, '')
+            const name = args.shift() + context.message.from.username.toUpperCase().replace(/[^A-Z]/g, '')
             if(name.charAt(0).toUpperCase() >= 'A' && name.charAt(0).toUpperCase() <= 'Z') {
                 context.reply('Name must not start with an alphabet')
             } else {
