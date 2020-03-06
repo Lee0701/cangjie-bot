@@ -27,20 +27,26 @@ module.exports = {
     aliases: ['cj'],
     description: 'cangjie character generator',
     execute(msg, args) {
-        const parsed = args.map(arg => cangjie.parse(arg))
+            const parsed = args.map(arg => cangjie.parse(arg))
+    
+            const canvas = Canvas.createCanvas(width, height)
+            const ctx = canvas.getContext('2d')
 
-        console.log(parsed)
+            parsed.forEach(ch => {
+                if(!ch) return
+                console.log(ch)
+                ctx.strokeStyle = 'black'
+                ctx.lineWidth = 6
+                ctx.lineCap = 'square'
+                try {
+                    cangjieLang.parse(ch).render(ctx, x, y, w, h)
+                } catch(e) {
+                    console.log(e)
+                }
+            })
+        const png = canvas.toBuffer()
 
-        const canvas = Canvas.createCanvas(width, height)
-        const ctx = canvas.getContext('2d')
-
-        // parsed.forEach(obj => {
-        //     if(!obj) return
-        //     renderWithOutline(ctx, cangjie.makeRoot(obj), 0, 0, width, height)
-        // })
-        // const png = canvas.toBuffer()
-
-        // const attachment = new Discord.MessageAttachment(png, 'out.png')
-        // msg.channel.send(attachment)
+        const attachment = new Discord.MessageAttachment(png, 'out.png')
+        msg.channel.send(attachment)
     },
 }
