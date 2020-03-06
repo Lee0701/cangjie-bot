@@ -10,6 +10,12 @@ const width = 128
 const height = 128
 const lineWidth = 6
 
+const margin = 8
+const x = margin
+const y = margin
+const w = width - margin*2
+const h = height - margin*2
+
 function renderWithOutline(ctx, component, x, y, width, height) {
     ctx.strokeStyle = 'white'
     ctx.lineWidth = lineWidth * 2
