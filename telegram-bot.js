@@ -119,7 +119,7 @@ class TelegramBot {
     }
 
     saveData() {
-        fs.writeFileSync(dataFile, JSON.stringify(this.data))
+        fs.writeFileSync(dataFile, JSON.stringify(this.data, null, 4))
     }
     
 }
