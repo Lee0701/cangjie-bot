@@ -1,11 +1,9 @@
 
 const CangjieLang = require('../cangjie/cangjie-lang.js')
-const Cangjie = require('../cangjie/cangjie.js')
 const Canvas = require('canvas')
 const Discord = require('discord.js')
 
 const cangjieLang = CangjieLang.DEFAULT
-const cangjie = Cangjie.DEFAULT
 const width = 128
 const height = 128
 const lineWidth = 6
@@ -29,24 +27,19 @@ function renderWithOutline(ctx, component, x, y, width, height) {
 }
 
 module.exports = {
-    name: 'cangjie',
-    aliases: ['cj'],
+    name: 'render',
     description: 'cangjie character generator',
     execute(msg, args) {
-        const parsed = args.map(arg => cangjie.parse(arg))
 
         const canvas = Canvas.createCanvas(width, height)
         const ctx = canvas.getContext('2d')
 
-        parsed.forEach(ch => {
-            if(!ch) return
-            console.log(ch)
-            try {
-                renderWithOutline(ctx, cangjieLang.parse(ch), x, y, w, h)
-            } catch(e) {
-                console.log(e)
-            }
-        })
+        try {
+            renderWithOutline(ctx, cangjieLang.parse(args.join(' ')), x, y, w, h)
+        } catch(e) {
+            console.log(e)
+        }
+
         const png = canvas.toBuffer()
 
         const attachment = new Discord.MessageAttachment(png, 'out.png')

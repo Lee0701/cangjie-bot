@@ -4,9 +4,9 @@ const CangjieLang = require('../cangjie/cangjie-lang.js')
 const cangjieLang = CangjieLang.DEFAULT
 
 module.exports = {
-    name: 'charset',
-    description: 'list of available characters',
+    name: 'get',
+    description: 'Get character code',
     execute(msg, args) {
-        msg.channel.send(Object.keys(cangjieLang.data).join(' '))
+        msg.channel.send(cangjieLang.data[args.join(' ')] || 'No result')
     },
 }
