@@ -15,7 +15,7 @@
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "liquidjs": "^9.20.1",
+    "liquidjs": "^10.0.0",
     "mkdirp": "^1.0.4",
     "telegraf": "^3.38.0",
     "telegraf-command-parts": "^1.0.3"
